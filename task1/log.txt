@@ -1,0 +1,11 @@
+commit f93150fedc6635e18f43a5b9d22a20af6441db16
+Author: Tatarchuk.Kanstantsin <dolbyone007@gmail.com>
+Date:   Sun Feb 12 00:18:03 2017 +0300
+
+    add task1/status.txt
+
+commit 487acd41061bff029e3ea18676166793156d4200
+Author: Tatarchuk.Kanstantsin <dolbyone007@gmail.com>
+Date:   Sun Feb 12 00:15:06 2017 +0300
+
+    add .gitignore
