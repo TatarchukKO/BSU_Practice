@@ -1,0 +1,179 @@
+html {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    background-image: url("img/sneakerswithoutdates.png");
+    background-size-height: 100vh;
+    background-size-weight: 100vw;
+    background-position: center;
+    font-family: "Century Gothic";
+}
+
+.header {
+    width: 100%;
+    height: 40px;
+    position: fixed;
+    top: 0;
+}
+
+.top-buttons {
+    position: fixed;
+    margin-top: 0;
+    width: 100%;
+    height: 40px;
+    background-color: #000000;
+}
+
+.home-img {
+    margin-left: 3%;
+    height: 40px;
+    width: 40px;
+    background: transparent;
+}
+
+.head-name {
+    color: white;
+    font-size: 20px;
+    font-family: "Century Gothic";
+    float: right;
+    margin-right: 25%;
+    margin-top: 0.5%;
+    width: 15%;
+    height: 20px;
+    text-decoration: none;
+}
+
+.user-name {
+    color: white;
+    font-size: 10px;
+    font-family: "Century Gothic";
+    float: right;
+    margin-right: 2%;
+    margin-top: 13px;
+    width: 70px;
+    height: 20px;
+    text-decoration: none;
+    background: transparent;
+}
+
+.sign-out-button {
+    color: white;
+    font-size: 10px;
+    font-family: "Century Gothic";
+    float: right;
+    margin-right: 3%;
+    margin-top: 9px;
+    width: 70px;
+    height: 20px;
+    text-decoration: none;
+    background: transparent;
+}
+
+.wrapper {
+    max-width: 90%;
+    min-height: 100%;
+    margin-left: 5%;
+    margin-top: 40px;
+    display: inline-block;
+}
+
+.news-list{
+    width: 70%;
+    float:left;
+}
+.news {
+    width: 100%;
+    display: inline-block;
+    background-color: rgba(255,255,255,0.5);
+    border-bottom: 1px black solid;
+    font-family: "Century Gothic";
+}
+
+.news img{
+    width: 30%;
+    float: left;
+}
+
+.news p{
+    float:left;
+    margin-left: 32%;
+}
+.news a{
+    font-size: 20px;
+}
+
+.pagination {
+    margin-top: 2%;
+    margin-bottom: 3%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.pagination a{
+    color: black;
+    margin-right: 1%;
+}
+
+.filter{
+    margin-left: 67%;
+    width: 25%;
+    float: left;
+    text-align: center;
+    background-color: rgba(255,255,255,0.5);
+    position: fixed;
+    padding-bottom: 15px;
+}
+
+.filter input{
+    width: 150px;
+    height: 20px;
+}
+
+.find-button{
+    padding: 0 15px;
+    border: 1px black solid;
+}
+.add-button {
+    margin-top: 80vh;
+    margin-left: 79%;
+    width: 25vh;
+    height: 10vh;
+    background-color: transparent;
+    position: fixed;
+}
+
+.add-button-img {
+    width: 7vh;
+    height: 7vh;
+}
+
+footer {
+    width: 100%;
+    height: 40px;
+    background-color: black;
+    color: white;
+    display: block;
+    font-family: "Century Gothic";
+    font-size: 12px;
+}
+
+footer div {
+    float: left;
+    margin-top: 3px;
+    margin-left: 15%;
+}
+
+footer:first-child {
+    margin-left: 3%;
+}
+
+clear {
+    clear: both;
+}
