@@ -38,7 +38,7 @@ body {
 
 .head-name {
     color: white;
-    font-size: 20px;
+    font-size: 3vh;
     font-family: "Century Gothic";
     float: right;
     margin-right: 25%;
@@ -82,28 +82,33 @@ body {
     display: inline-block;
 }
 
-.news-list{
+.news-list {
     width: 70%;
-    float:left;
+    float: left;
 }
+
 .news {
     width: 100%;
     display: inline-block;
-    background-color: rgba(255,255,255,0.5);
+    background-color: rgba(255, 255, 255, 0.5);
     border-bottom: 1px black solid;
-    font-family: "Century Gothic";
 }
 
-.news img{
+.news:hover{
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.news img {
     width: 30%;
     float: left;
 }
 
-.news p{
-    float:left;
+.news p {
+    float: left;
     margin-left: 32%;
 }
-.news a{
+
+.news a {
     font-size: 20px;
 }
 
@@ -116,33 +121,35 @@ body {
     width: 100%;
 }
 
-.pagination a{
+.pagination a {
     color: black;
     margin-right: 1%;
 }
 
-.filter{
+.filter {
     margin-left: 67%;
     width: 25%;
     float: left;
     text-align: center;
-    background-color: rgba(255,255,255,0.5);
+    background-color: rgba(255, 255, 255, 0.5);
     position: fixed;
     padding-bottom: 15px;
 }
 
-.filter input{
-    width: 150px;
+.filter input {
+    width: 12vw;
     height: 20px;
 }
 
-.find-button{
-    padding: 0 15px;
+.find-button {
+    padding: 0 18px;
+    background: transparent;
     border: 1px black solid;
 }
+
 .add-button {
     margin-top: 80vh;
-    margin-left: 79%;
+    margin-left: 83%;
     width: 25vh;
     height: 10vh;
     background-color: transparent;
