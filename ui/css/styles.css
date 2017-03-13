@@ -17,12 +17,10 @@ body {
 .header {
     width: 100%;
     height: 40px;
-    position: fixed;
     top: 0;
 }
 
 .top-buttons {
-    position: fixed;
     margin-top: 0;
     width: 100%;
     height: 40px;
@@ -87,29 +85,35 @@ body {
     float: left;
 }
 
-.news {
+.article-list-item {
     width: 100%;
     display: inline-block;
     background-color: rgba(255, 255, 255, 0.5);
     border-bottom: 1px black solid;
 }
 
-.news:hover{
+.article-list-item:hover {
     background-color: rgba(255, 255, 255, 0.8);
 }
 
-.news img {
+.article-list-item-img {
+    display: inline-block;
     width: 30%;
     float: left;
 }
 
-.news p {
+.article-list-item-summary {
+    max-width: 60%;
+    margin: 0;
     float: left;
-    margin-left: 32%;
 }
 
-.news a {
+.article-list-item a {
     font-size: 20px;
+}
+
+.article-list-item-meta{
+    float:right;
 }
 
 .pagination {
@@ -154,6 +158,7 @@ body {
     height: 10vh;
     background-color: transparent;
     position: fixed;
+    visibility: hidden;
 }
 
 .add-button-img {

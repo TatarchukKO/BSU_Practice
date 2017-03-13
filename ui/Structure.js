@@ -99,7 +99,7 @@ function getArticles(skip, top, filterconfig) {
                             if (containsTags(filterconfig, news[i]) && filterconfig.author === news[i].author) {
                                 newArr[i - skip] = news[i];
                             }
-                        } else if (filterconfig.author === news[i].author){
+                        } else if (filterconfig.author === news[i].author) {
                             newArr[i - skip] = news[i];
                         }
                     } else if (filterconfig.dateBefore === undefined && filterconfig.dateAfter != undefined) {
@@ -162,9 +162,8 @@ function validateArticle(obj) {
         (obj.tags.length > 0 && obj.title.length < 100 && obj.summary.length < 200)
     ) {
         return true;
-    } else {
-        return false;
     }
+    return false;
 }
 
 function addArticle(obj) {
@@ -182,7 +181,7 @@ function addArticle(obj) {
 
 function removeArticle(id) {
     for (var i = 0; i < news.length; i++) {
-        if (news[i].id == id) {
+        if (news[i].id === id) {
             news.splice(i, 1);
         }
     }

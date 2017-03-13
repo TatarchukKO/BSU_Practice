@@ -5,8 +5,7 @@
     <title>Sneaker news</title>                                <!--Во вкладке будет эта надпись-->
     <link rel="stylesheet" href="css/styles.css">
     <script type="text/javascript" src="Structure.js"></script>
-    <script>showMessage(0,3, {dateAfter: new Date('2017-02-28T23:00:00')})</script>
-
+    <script type="text/javascript" src="dom.js"></script>
 </head>
 <body>
 <header class="header">
@@ -23,6 +22,8 @@
         <a href="#" target="_blank"><img src="img/add-button.png" class="add-button-img"></a>
     </div>
     <div class="news-list">
+
+        <!--
         <div class="news">
             <img src="https://i1.wp.com/hypebeast.com/image/2015/04/reebok-instapump-fury-og-black-white-0.jpg?w=960">
             <a href="#">NIKE FLYKNIT RACER “TRIPLE WHITE” RELEASES NEXT WEEK</a>
@@ -34,7 +35,13 @@
                 isn’t a traditional Triple White option either,
                 as the midsole gets an off-white Sail treatment while you won’t have to worry too much about keeping the
                 outsole clean thanks to the standard black peeking through.
-                Check out more detailed shots below and expect this pair to drop on Nike.com next week.
+                Check out more detailed shots below and expect this pair to drop on Nike.com next week.aaaaaaaa
+                And guys, don’t worry – this Triple White Flyknit Racer should be releasing in a full size run. This
+                isn’t a traditional Triple White option either,
+                as the midsole gets an off-white Sail treatment while you won’t have to worry too much about keeping the
+                outsole clean thanks to the standard black peeking through.
+                Check out more detailed shots below and expect this pair to drop on Nike.com next week.aaaaaaaa
+
                 <br>
                 <div class="author">John Doe <br> 27.02.2017</div>
                 <div class="tag">#tag1 #tag2 #tag3</div>
@@ -184,6 +191,7 @@
                 <div class="tag">#tag1 #tag2 #tag3</div>
             </div>
         </div>
+        -->
         <div class="pagination">
             <a href="#">&laquo;</a>
             <a href="#" id="active">1</a>
@@ -203,6 +211,7 @@
         <input type="date" placeholder="dd.mm.yyyy"><br><br>
         <button class="find-button">НАЙТИ</button>
     </div>
+
 </div>
 <clear></clear>
 <footer>
@@ -210,5 +219,20 @@
     <div>Татарчук Константин Олегович 2 курс, 5 группа <br> 27.02.2017</div>
     <div>dolbyone007@gmail.com</div>
 </footer>
+<template id="template-article-list-item">
+    <div class="article-list-item" data-id="id">
+        <a href="#" class="article-list-item-title">
+            Заголовок статьи
+        </a>
+        <img src="" class="article-list-item-img">
+        <p class="article-list-item-summary">
+            Краткое описание для статьи. Тут краткое описание
+        </p>
+        <div class="article-list-item-meta">
+            <span class="article-list-item-author">Досов Антон </span>
+            <span class="article-list-item-date">12.12.1995 04:35</span>
+        </div>
+    </div>
+</template>
 </body>
 </html>
