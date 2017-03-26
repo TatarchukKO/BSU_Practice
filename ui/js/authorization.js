@@ -29,6 +29,8 @@ var authoModel = (function () {
         document.querySelector(".user-name").style.visibility = "hidden";
         document.querySelector(".dv-edit-remove-buttons").style.visibility = "hidden";
         document.querySelector(".user-name").innerHTML = "";
+        document.querySelector(".add-button").style.visibility = "hidden";
+
     }
 
     function isValidateLogIn() {
