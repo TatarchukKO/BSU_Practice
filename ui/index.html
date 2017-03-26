@@ -4,25 +4,25 @@
     <meta charset="UTF-8">
     <title>Sneaker news</title>                                <!--Во вкладке будет эта надпись-->
     <link rel="stylesheet" href="css/styles.css">
-    <script type="text/javascript" src="Structure.js"></script>
-    <script type="text/javascript" src="dom.js"></script>
+
 </head>
 <body>
 <header class="header">
     <div class="top-buttons">
-        <a href="https://vk.com/ohqua" target="_blank"><img src="css/img/images.png" class="home-img"></a>
-        <button class="sign-out-button">ВЫХОД</button>
+        <a href="index.html"><img src="css/img/images.png" class="home-img"></a>
+        <form class="search-box">
+            <img src="img/search-icon-without-backgr.png" class="search-icon">
+            <input type="search" placeholder="Поиск" onkeypress="return findArticles(event)" id="search-input">
+        </form>
+        <button class="sign-out-button" onclick="authoModel.pressLogOutButton()">ВЫХОД</button>
+        <button class="sign-in-button" onclick="authoModel.pressLogInButton()">ВХОД</button>
         <div class="user-name">USER</div>
         <div class="head-name">SNEAKER NEWS</div>
     </div>
     <div class="clear"></div>
 </header>
 <div class="wrapper">
-    <div class="add-button">
-        <a href="#" target="_blank"><img src="img/add-button.png" class="add-button-img"></a>
-    </div>
     <div class="news-list">
-
         <!--
         <div class="news">
             <img src="https://i1.wp.com/hypebeast.com/image/2015/04/reebok-instapump-fury-og-black-white-0.jpg?w=960">
@@ -192,47 +192,103 @@
             </div>
         </div>
         -->
-        <div class="pagination">
-            <a href="#">&laquo;</a>
-            <a href="#" id="active">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">4</a>
-            <a href="#">...</a>
-            <a href="#">6</a>
-            <a href="#">&raquo;</a>
-        </div>
         <clear></clear>
     </div>
-    <div class="filter">
-        <h4>ФИЛЬТР</h4>
-        <input type="text" placeholder="author"><br>
-        <input type="text" placeholder="tag"><br>
-        <input type="date" placeholder="dd.mm.yyyy"><br><br>
-        <button class="find-button">НАЙТИ</button>
+    <div class="filter-add-button">
+        <div class="filter">
+            <h4>ФИЛЬТР</h4>
+            <input type="text" placeholder="автор" class="author-filter"><br>
+            <input type="text" placeholder="тэг" class="tags-filter"><br>
+            <input type="date" placeholder="дд.мм.гггг" class="date-filter"><br><br>
+            <button class="find-button" onclick="filterNews()">НАЙТИ</button>
+        </div>
+        <button class="add-button" onclick="goToAddPage()">ДОБАВИТЬ НОВОСТЬ</button>
     </div>
-
 </div>
+<div class="show-more-news">
+    <input type="button" value="ПОКАЗАТЬ ЕЩЕ" onclick="showMoreNews.showMore()">
+</div>
+<div class="detailed-view" data-id="id">
+    <div class="dv-news">
+        <div class="dv-title">
+            ЗАГОЛОВОК СТАТЬИ
+        </div>
+        <img src="img/adidas-Originals-Hamburg.png" class="dv-img">
+        <p class="dv-content">content</p>
+        <div class="dv-meta">
+            <span class="dv-tags"></span><br>
+            <span class="dv-author">Татарчук Константин</span><br>
+            <span class="dv-date">14.07.1997</span>
+        </div>
+    </div>
+    <div class="dv-edit-remove-buttons">
+        <input type="button" class="dv-edit-news-button" onclick="articleEdit.goToEditPage(this.parentNode.parentNode)" value="Редактировать новость">
+        <input type="button" class="dv-remove-news-button" onclick="removeNews(this.parentNode.parentNode)" value="Удалить новость">
+    </div>
+</div>
+<div class="authorization">
+    <h4>АВТОРИЗАЦИЯ</h4>
+    <form class="authorization-form" method="get" action="index.html">
+        <input type="text" placeholder="логин" id="login" required><br><br>
+        <input type="password" placeholder="пароль" id="pass" required><br><br><br>
+        <input type="button"
+               onclick=authoModel.isValidateLogIn(document.getElementsByClassName(".authorization-form"))
+               value="ВОЙТИ" class="log-in-button">
+    </form>
+</div>
+<div id="add-news-page">
+    <form class="add-news-form" name="addNewsForm">
+        <textarea name="title" id="add-news-title" placeholder="Заголовок статьи" maxlength="61"
+                  required></textarea><br>
+        <textarea name="image" id="add-news-img" placeholder="Вставьте ссылку на картинку"></textarea><br>
+        <textarea name="content" cols="40" id="add-news-content" placeholder="Содержимое"></textarea><br>
+        <textarea name="tags" id="add-news-tags" placeholder="Тэги" required></textarea><br>
+        <input type="button" id="add-news-button" onclick="addNewsOnButton()" value="Добавить новость">
+    </form>
+</div>
+<div id="edit-news-page" data-id="id">
+    <form class="edit-news-form" name="addNewsForm">
+        <textarea name="title" id="edit-news-title" placeholder="Заголовок статьи" maxlength="61"
+                  required></textarea><br>
+        <textarea name="image" id="edit-news-img" placeholder="Вставьте ссылку на картинку"></textarea><br>
+        <textarea name="content" cols="40" id="edit-news-content" placeholder="Содержимое"></textarea><br>
+        <textarea name="tags" id="edit-news-tags" placeholder="Тэги" required></textarea><br>
+        <input type="button" id="edit-news-button" onclick="articleEdit.editNews()" value="Редактировать новость">
+    </form>
+</div>
+<template id="template-article-list-item">
+    <div class="article-list-item" data-id="id">
+        <div class="title">
+            <a class="article-list-item-title" onclick="openDetailedView(this.parentNode.parentNode)">
+                Заголовок статьи
+            </a>
+        </div>
+        <img src="" class="article-list-item-img">
+        <p class="article-list-item-summary">
+            Краткое описание для статьи. Тут краткое описание
+        </p>
+        <div class="article-list-item-meta">
+            <span class="article-list-item-author">Татарчук Константин</span>
+            <span class="article-list-item-date">14.07.1997</span>
+        </div>
+    </div>
+</template>
 <clear></clear>
 <footer>
     <div>Sneaker news</div>
     <div>Татарчук Константин Олегович 2 курс, 5 группа <br> 27.02.2017</div>
     <div>dolbyone007@gmail.com</div>
 </footer>
-<template id="template-article-list-item">
-    <div class="article-list-item" data-id="id">
-        <a href="#" class="article-list-item-title">
-            Заголовок статьи
-        </a>
-        <img src="" class="article-list-item-img">
-        <p class="article-list-item-summary">
-            Краткое описание для статьи. Тут краткое описание
-        </p>
-        <div class="article-list-item-meta">
-            <span class="article-list-item-author">Досов Антон </span>
-            <span class="article-list-item-date">12.12.1995 04:35</span>
-        </div>
-    </div>
-</template>
+
+<!--<script type="text/javascript" src="Structure.js"></script>-->
+<script type="text/javascript" src="js/dom.js"></script>
+<script type="text/javascript" src="js/authorization.js"></script>
+<script type="text/javascript" src="js/detailed-view.js"></script>
+<script type="text/javascript" src="js/search.js"></script>
+<script type="text/javascript" src="js/filter.js"></script>
+<script type="text/javascript" src="js/add-news.js"></script>
+<script type="text/javascript" src="js/edit-news.js"></script>
+<script type="text/javascript" src="js/remove-news.js"></script>
+<script type="text/javascript" src="js/show-more-news.js"></script>
 </body>
 </html>

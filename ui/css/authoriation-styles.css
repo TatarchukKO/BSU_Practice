@@ -1,0 +1,43 @@
+body {
+    height: 100%;
+    margin: 0;
+    background-image: url("img/background.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+.authorization {
+    text-align: center;
+    width: 20%;
+    margin: 10% auto;
+    background-color: rgba(2, 2, 2, 0.3);
+    padding-top: 1%;
+    padding-bottom: 1%;
+
+    color: white;
+    font-family: "CenturyGothicRu";
+}
+
+.authorization input {
+    padding: 0;
+}
+
+.log-in-button {
+    text-align: center;
+    background: transparent;
+    border: none;
+
+    color: white;
+    font-family: CenturyGothicRu;
+    font-size: 15px;
+}
+
+@font-face {
+    font-family: "CenturyGothicRu";
+    src: url("../fonts/CenturyGothicRegular/CenturyGothicRegular.eot");
+    src: url("../fonts/CenturyGothicRegular/CenturyGothicRegular.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/CenturyGothicRegular/CenturyGothicRegular.woff") format("woff"),
+    url("../fonts/CenturyGothicRegular/CenturyGothicRegular.ttf") format("truetype");
+    font-style: normal;
+    font-weight: normal;
+}
