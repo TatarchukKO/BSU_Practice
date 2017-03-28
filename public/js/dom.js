@@ -148,13 +148,14 @@ var articleModel = (function () {
 
     function validateArticle(obj) {
         if (
-            (obj.id && typeof obj.id == "string") &&
-            (obj.title && typeof obj.title == "string" ) &&
-            (obj.author && typeof obj.author == "string") &&
-            (obj.content && typeof obj.content == "string" ) &&
-            (obj.summary && typeof obj.summary == "string") &&
-            (obj.createdAt && typeof obj.createdAt == "object") &&
-            (obj.tags && typeof obj.tags == "object") &&
+            (obj.id !== "" && typeof obj.id == "string") &&
+            (obj.title !== "" && typeof obj.title == "string" ) &&
+            (obj.image !== "" && typeof obj.image == "string" ) &&
+            (obj.author !== "" && typeof obj.author == "string") &&
+            (obj.content !== "" && typeof obj.content == "string" ) &&
+            (obj.summary !== "" && typeof obj.summary == "string") &&
+            (obj.createdAt !== "" && typeof obj.createdAt == "object") &&
+            (obj.tags !== "" && typeof obj.tags == "object") &&
             (obj.tags.length > 0 && obj.title.length < 41 && obj.summary.length < 200)
         ) {
             return true;
