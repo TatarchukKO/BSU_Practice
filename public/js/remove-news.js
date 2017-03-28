@@ -6,6 +6,7 @@ function removeNews(currentNews){
     var id = currentNews.dataset.id;
 
     articleModel.removeArticle(id);
+    articleModel.storageArticles();
     articleRenderer.removeArticlesFromDom();
     articleRenderer.insertArticlesInDOM(articleModel.getArticles(0, articleModel.getSizeArticles()));
 

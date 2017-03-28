@@ -27,8 +27,12 @@ var articleEdit = (function () {
         article.summary = document.querySelector("#edit-news-content").value.substring(0, 41);
         article.tags = document.querySelector("#edit-news-tags").value.toLowerCase().split(", ");
 
-        articleModel.removeArticle(id);
-        articleModel.addArticle(article);
+        if(articleModel.validateArticle(article)){
+            articleModel.removeArticle(id);
+            articleModel.addArticle(article);
+        }
+
+        articleModel.storageArticles();
         articleRenderer.removeArticlesFromDom();
         articleRenderer.insertArticlesInDOM(articleModel.getArticles(0, articleModel.getSizeArticles()));
 

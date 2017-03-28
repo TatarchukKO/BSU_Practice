@@ -16,11 +16,12 @@ function addNewsOnButton() {
         author: userName,
         createdAt: new Date(),
         content: document.querySelector("#add-news-content").value,
-        summary: document.querySelector("#add-news-content").value.substring(0, 41),
+        summary: document.querySelector("#add-news-content").value.substring(0, 200),
         tags: document.querySelector("#add-news-tags").value.toLowerCase().split(", "),
     };
 
     articleModel.addArticle(article);
+    articleModel.storageArticles();
     articleRenderer.removeArticlesFromDom();
     articleRenderer.insertArticlesInDOM(articleModel.getArticles(0, articleModel.getSizeArticles()));
 

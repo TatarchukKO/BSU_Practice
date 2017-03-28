@@ -58,6 +58,10 @@ var authoModel = (function () {
         }
     }
 
+    function storageUsers() {
+        localStorage.setItem("users", JSON.stringify(validData));
+    }
+
     return {
         pressLogInButton: pressLogInButton,
         isValidateLogIn: isValidateLogIn,

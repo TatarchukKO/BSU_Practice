@@ -148,14 +148,14 @@ var articleModel = (function () {
 
     function validateArticle(obj) {
         if (
-            (obj.id != undefined && typeof obj.id == "string") &&
-            (obj.title != undefined && typeof obj.title == "string" ) &&
-            (obj.author != undefined && typeof obj.author == "string") &&
-            (obj.content != undefined && typeof obj.content == "string" ) &&
-            (obj.summary != undefined && typeof obj.summary == "string") &&
-            (obj.createdAt != undefined && typeof obj.createdAt == "object") &&
-            (obj.tags != undefined && typeof obj.tags == "object") &&
-            (obj.tags.length > 0 && obj.title.length < 100 && obj.summary.length < 200)
+            (obj.id && typeof obj.id == "string") &&
+            (obj.title && typeof obj.title == "string" ) &&
+            (obj.author && typeof obj.author == "string") &&
+            (obj.content && typeof obj.content == "string" ) &&
+            (obj.summary && typeof obj.summary == "string") &&
+            (obj.createdAt && typeof obj.createdAt == "object") &&
+            (obj.tags && typeof obj.tags == "object") &&
+            (obj.tags.length > 0 && obj.title.length < 41 && obj.summary.length < 200)
         ) {
             return true;
         }
@@ -222,6 +222,18 @@ var articleModel = (function () {
         return true;
     }
 
+    function replaceArticles() {
+        GLOBAL_ARTICLES = JSON.parse(localStorage.getItem("articles"));
+        for (var i = 0; i < GLOBAL_ARTICLES.length; i++)
+            GLOBAL_ARTICLES[i].createdAt = new Date(GLOBAL_ARTICLES[i].createdAt);
+        tags = JSON.parse(localStorage.getItem("tags"));
+    }
+
+    function storageArticles() {
+        localStorage.setItem("tags", JSON.stringify(tags));
+        localStorage.setItem("articles", JSON.stringify(GLOBAL_ARTICLES));
+    }
+
     return {
         getArticles: getArticles,
         getArticle: getArticle,
@@ -232,7 +244,9 @@ var articleModel = (function () {
         containsTags: containsTags,
         GLOBAL_ARTICLES: GLOBAL_ARTICLES,
         tags: tags,
-        getSizeArticles: getSizeArticles
+        getSizeArticles: getSizeArticles,
+        replaceArticles: replaceArticles,
+        storageArticles: storageArticles
     };
 }());
 
@@ -308,11 +322,15 @@ document.addEventListener('DOMContentLoaded', startApp);
 
 
 function startApp() {
+    if(!localStorage.getItem("articles")){
+        articleModel.storageArticles();
+    }
     /* DOM Загрузился.
      Можно найти в нем нужные элементы и сохранить в переменные */
+    articleModel.replaceArticles();
     articleRenderer.init();
     /* Нарисуем статьи из массива GLOBAL_ARTICLES в DOM */
-    renderArticles(0, 6/*articleModel.getSizeArticles()*/);
+    renderArticles(0, 6);
 }
 
 /* Глобальная Функция для проверки. Свяжет модель и отображения */
