@@ -17,6 +17,6 @@ function openDetailedView(currentNews) {
     document.querySelector(".dv-date").textContent = article.createdAt.toDateString();
     document.querySelector(".dv-tags").textContent = "";
     for (var j = 0; j < article.tags.length; j++) {
-        document.querySelector(".dv-tags").textContent += (article.tags[j] + " ");
+        document.querySelector(".dv-tags").textContent += ("#" + article.tags[j].trim() + " ");
     }
 }

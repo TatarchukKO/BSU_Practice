@@ -30,9 +30,9 @@ app.post("/articles", function(req, res){
     res.json(db.articles.save(req.body));
 });
 
-app.delete("/articles", function(req,res){
+/*app.delete("/articles", function(req,res){
     res.json(db.articles.remove({id : req.body.id}));
-});
+});*/
 
 app.delete("/articles/:id", function(req,res){
     res.json(db.articles.remove({id : req.params.id}));

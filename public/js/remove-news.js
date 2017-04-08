@@ -1,13 +1,14 @@
 /**
  * Created by Kanstantsin on 26.03.2017.
  */
+// ОТРЕДАКТИРОВАНО, РАБОТАЕТ
 
 function removeNews(currentNews){
     var id = currentNews.dataset.id;
 
-    articleModel.removeArticle(id);
     removeArticleFromDb(id);
-    articleModel.storageArticles();
+                                          articleModel.storageArticles();                     // для тегов
+    articleModel.replaceArticles();
     articleRenderer.removeArticlesFromDom();
     articleRenderer.insertArticlesInDOM(articleModel.getArticles(0, articleModel.getSizeArticles()));
 

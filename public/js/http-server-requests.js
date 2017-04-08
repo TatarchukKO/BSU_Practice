@@ -30,6 +30,7 @@ function addArticleInDb(article) {
 
 function removeArticleFromDb(id) {
     let request = new XMLHttpRequest();
-    request.open("DELETE", "/article/" + id);
+    request.open("DELETE", "/articles/" + id);
+    request.setRequestHeader("content-type", "application/json");
     request.send();
 }

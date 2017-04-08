@@ -152,7 +152,7 @@ var articleModel = (function () {
             typeof article.id === "string" && typeof  article.createdAt === "object" &&
             typeof article.tags === "object" && typeof  article.author === "string" &&
             typeof  article.content === "string" && typeof  article.title === "string" &&
-            article.title.length > 0 && article.title.length <= 40 &&
+            article.title.length > 0 /*&& article.title.length <= 40*/ &&
             article.tags.length >= 1 && article.tags.length <= 5 &&
             article.content.length > 0 && article.author.length > 0)
             return true;
@@ -235,7 +235,7 @@ var articleModel = (function () {
 
     function storageArticles() {
         localStorage.setItem("tags", JSON.stringify(tags));
-        localStorage.setItem("articles", JSON.stringify(GLOBAL_ARTICLES));
+        //localStorage.setItem("articles", JSON.stringify(GLOBAL_ARTICLES));
     }
 
     return {
@@ -327,9 +327,6 @@ document.addEventListener('DOMContentLoaded', startApp);
 
 
 function startApp() {
-    if(!localStorage.getItem("articles")){
-        articleModel.storageArticles();
-    }
     /* DOM Загрузился.
      Можно найти в нем нужные элементы и сохранить в переменные */
     articleModel.replaceArticles();
