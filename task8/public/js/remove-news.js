@@ -7,7 +7,7 @@ function removeNews(currentNews){
     var id = currentNews.dataset.id;
 
     removeArticleFromDb(id);
-                                          articleModel.storageArticles();                     // для тегов
+    articleModel.storageArticles();                     // для тегов
     articleModel.replaceArticles();
     articleRenderer.removeArticlesFromDom();
     articleRenderer.insertArticlesInDOM(articleModel.getArticles(0, articleModel.getSizeArticles()));

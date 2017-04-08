@@ -4,10 +4,10 @@
 
 
 var showMoreNews = (function () {
-    var newsAmountOnPage = 3;
+    var newsAmountOnPage = 0;
 
     function startApp() {
-        newsAmountOnPage += 3;
+        newsAmountOnPage += 6;
         /* DOM Загрузился.
          Можно найти в нем нужные элементы и сохранить в переменные */
         articleRenderer.init();

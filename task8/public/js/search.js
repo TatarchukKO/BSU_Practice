@@ -3,11 +3,10 @@
  */
 
 function findArticles(event) {
-    var article_list = articleModel.GLOBAL_ARTICLES;
-    var article_title;
-    var matched_articles = [];
-
     if (event.keyCode === 13) {
+        var article_list = articleModel.getArticles(0,articleModel.getSizeArticles())
+        var article_title;
+        var matched_articles = [];
         var input_text = document.querySelector("#search-input").value.toLowerCase();
         for (var i = 0; i < article_list.length; i++) {
             article_title = article_list[i].title.toLowerCase();
@@ -19,6 +18,4 @@ function findArticles(event) {
         articleRenderer.insertArticlesInDOM(matched_articles);
         return false;
     }
-
-    return true;
 }

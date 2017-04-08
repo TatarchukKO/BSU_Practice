@@ -23,7 +23,6 @@ var articleEdit = (function () {
         let editedArticle = {};
 
         editedArticle = currentArticle;
-        console.log(editedArticle);
 
         editedArticle.title = document.querySelector("#edit-news-title").value;
         editedArticle.content = document.querySelector("#edit-news-content").value;
@@ -33,58 +32,15 @@ var articleEdit = (function () {
         if (articleModel.validateTags(tagsStr)) {
             editedArticle.tags = tagsStr.split(",", 5);
         }
-        console.log(editedArticle);
 
-        if(articleModel.validateArticle(editedArticle)){
-            console.log("ture");
+        if (articleModel.validateArticle(editedArticle)) {
             removeArticleFromDb(id);
             addArticleInDb(editedArticle);
             articleModel.replaceArticles();
-            renderArticles(0,6);
-        } else{
-            console.log("false");
+            renderArticles(0, 6);
         }
-
         document.querySelector(".wrapper").style.display = "block";
         document.querySelector("#edit-news-page").style.display = "none";
-
-        /*
-         var newArticle = articleModel.getArticle(id);
-         var article = {};
-
-         article.createdAt = new Date();
-         article.author = newArticle.author;
-         article.id = newArticle.id;
-         article.title = document.querySelector("#edit-news-title").value;
-         article.image = document.querySelector("#edit-news-img").value;
-         article.content = document.querySelector("#edit-news-content").value;
-         article.summary = document.querySelector("#edit-news-content").value.substring(0, 250);
-         var tagsStr = document.querySelector("#edit-news-tags").value.toLowerCase();
-         console.log(tagsStr);
-         if (articleModel.validateTags(tagsStr)){
-         article.tags = tagsStr.split(",");
-         }
-
-         console.log(article);
-         console.log(articleModel.validateArticle(article));
-
-         if(articleModel.validateArticle(article)){
-         articleModel.addArticle(article);                  //
-         articleModel.storageArticles();                    // для ТЕГОВ
-         removeArticleFromDb(id);
-         addArticleInDb(article);
-         articleModel.replaceArticles();
-
-
-         articleRenderer.removeArticlesFromDom();
-         articleRenderer.insertArticlesInDOM(articleModel.getArticles(0, articleModel.getSizeArticles()));
-         }
-
-         console.log(articleModel.getArticle(id));
-         document.querySelector(".wrapper").style.display = "block";
-         document.querySelector("#edit-news-page").style.display = "none";
-         */
-
     }
 
     return {
