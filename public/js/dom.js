@@ -5,7 +5,7 @@
 var articleModel = (function () {
     let GLOBAL_ARTICLES = [{}];
 
-    var tags = ["Музыка", "Спорт", "Искусство"];
+    var tags = [];
 
     function getArticles(skip, top) {
         skip = skip || 0;
@@ -13,55 +13,79 @@ var articleModel = (function () {
         return GLOBAL_ARTICLES.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).slice(skip, skip + top);
     }
 
-    function getArticle(id) {
-        for(var i = 0; i < GLOBAL_ARTICLES.length; i++)
-        {
-            if(GLOBAL_ARTICLES[i].id === id)
-            {
-                return GLOBAL_ARTICLES[i];
+    function getArticleIndexById(id) {
+        let index;
+        for (let i = 0; i < GLOBAL_ARTICLES.length; i++) {
+            if (GLOBAL_ARTICLES[i].id === id) {
+                index = i;
+                break;
             }
         }
+        return index;
+    }
+
+    function getArticle(id) {
+        let index = getArticleIndexById(id);
+        if (typeof index === "number") {
+            return GLOBAL_ARTICLES[index];
+        } else {
+            return null;
+        }
+    }
+
+    function isContainsTagInTaglist(tag) {
+        if (tags.indexOf(tag) === -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function addNewTagsToTagList(obj) {
+        obj.tags.forEach(function (item) {
+            if (!isContainsTagInTaglist(item)) {
+                tags.push(item);
+            }
+        });
     }
 
     function addArticle(obj) {
         if (validateArticle(obj)) {
-            for (var i = 0; i < obj.tags.length; i++) {
-                if (tags.indexOf(obj.tags[i]) === -1) {
-                    tags.push(obj.tags[i]);
-                }
-            }
+            addNewTagsToTagList(obj);
             GLOBAL_ARTICLES[GLOBAL_ARTICLES.length] = obj;
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     function validateArticle(article) {
+        let imgRegExp = /^(?:([a-z]+):(?:([a-z]*):)?\/\/)?(?:([^:@]*)(?::([^:@]*))?@)?((?:[a-z0-9_-]+\.)+[a-z]{2,}|localhost|(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])\.){3}(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])))(?::(\d+))?(?:([^:\?\#]+))?(?:\?([^\#]+))?(?:\#([^\s]+))?$/i;
         if (article.id && article.createdAt && article.tags && article.author &&
             article.content && article.title && article.image &&
             typeof article.id === "string" && typeof  article.createdAt === "object" &&
             typeof article.tags === "object" && typeof  article.author === "string" &&
             typeof  article.content === "string" && typeof  article.title === "string" &&
-            article.title.length > 0 /*&& article.title.length <= 40*/ &&
+            article.title.length > 0 && article.image.search(imgRegExp) !== -1 &&
             article.tags.length >= 1 && article.tags.length <= 5 &&
-            article.content.length > 0 && article.author.length > 0)
+            article.content.length > 0 && article.author.length > 0) {
             return true;
-        else
+        } else {
             return false;
-    }
-
-    function removeArticle(id) {
-        for (var i = 0; i < GLOBAL_ARTICLES.length; i++) {
-            if (GLOBAL_ARTICLES[i].id === id) {
-                GLOBAL_ARTICLES.splice(i, 1);
-            }
         }
     }
 
+    function removeArticle(id) {
+        let index = getArticleIndexById(id);
+        GLOBAL_ARTICLES.splice(index, 1);
+    }
+
     function validateTags(tagsStr) {
-        if (tagsStr.length > 0){
+        if (tagsStr.length > 0) {
             return true;
-        } else return false;
+        } else {
+            return false;
+        }
     }
 
     function editArticle(id, obj) {
@@ -107,13 +131,15 @@ var articleModel = (function () {
         return GLOBAL_ARTICLES.length;
     }
 
-    function containsTags(tagList, news) {
-        for (var i = 0; i < tagList.tags.length; i++) {
-            if (news.tags.indexOf(tagList.tags[i]) === -1) {
-                return false;
+    function isContainsTagsInArticle(tagArr, obj) {
+        let containFlag = false;
+        tagArr.forEach(function (item) {
+            if (obj.tags.indexOf(item) !== -1){
+                containFlag = true;
+                return;
             }
-        }
-        return true;
+        });
+        return containFlag;
     }
 
     function replaceArticles() {
@@ -135,7 +161,7 @@ var articleModel = (function () {
         validateArticle: validateArticle,
         removeArticle: removeArticle,
         editArticle: editArticle,
-        containsTags: containsTags,
+        isContainsTagsInArticle: isContainsTagsInArticle,
         GLOBAL_ARTICLES: GLOBAL_ARTICLES,
         tags: tags,
         getSizeArticles: getSizeArticles,

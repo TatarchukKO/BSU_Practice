@@ -119,3 +119,33 @@ function filterNews() {
     articleRenderer.removeArticlesFromDom();
     articleRenderer.insertArticlesInDOM(matched_articles);
 }
+
+/*    input_tags = document.querySelector(".tags-filter").value.toLowerCase().split(", ");
+ input_author = document.querySelector(".author-filter").value.toLowerCase();
+ input_date = document.querySelector(".date-filter").value; //new Date(document.querySelector(".date-filter").value).toDateString();
+ let isUndefFilter = false;
+ if (!input_author || !input_date || input_tags.indexOf("") !== -1) {
+ isUndefFilter = true;
+ }
+ for (let i = article_list.length-1; i >= 0; i--) {
+ if (isUndefFilter) {
+ if (!input_author) {
+ input_author = article_list[i].author;
+ }
+ if (!input_date) {
+ input_date = article_list[i].createdAt.toString();
+ }
+ if (input_tags.indexOf("") !== -1) {
+ input_tags = article_list[i].tags;
+ }
+ }
+ console.log(input_author);
+ console.log(article_list[i].author);
+ console.log(input_tags);
+ console.log(article_list[i].tags);
+ console.log(new Date(input_date).toDateString());
+ console.log(article_list[i].createdAt.toDateString());
+ if (article_list[i].author === input_author && article_list[i].createdAt.toDateString() === new Date(input_date).toDateString() && articleModel.isContainsTagsInArticle(input_tags, article_list[i])) {
+ matched_articles.push(article_list[i]);
+ }
+ }*/

@@ -32,10 +32,8 @@ var articleEdit = (function () {
         if (articleModel.validateTags(tagsStr)) {
             editedArticle.tags = tagsStr.split(",", 5);
         }
-
         if (articleModel.validateArticle(editedArticle)) {
-            removeArticleFromDb(id);
-            addArticleInDb(editedArticle);
+            editArticleFromDb(editedArticle);
             articleModel.replaceArticles();
             renderArticles(0, 6);
         }

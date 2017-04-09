@@ -26,11 +26,12 @@ function addNewsOnButton() {
     }
 
     console.log(article);
-    addArticleInDb(article);
-
-    articleModel.storageArticles();                        // для тегов
-    articleModel.replaceArticles();
-    renderArticles(0, 6);
+    if(articleModel.validateArticle(article)) {
+        addArticleInDb(article);
+        articleModel.storageArticles();                        // для тегов
+        articleModel.replaceArticles();
+        renderArticles(0, 6);
+    }
 
     document.querySelector(".wrapper").style.display = "block";
     document.querySelector(".show-more-news").style.display = "block";

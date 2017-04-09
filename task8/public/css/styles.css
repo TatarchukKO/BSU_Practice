@@ -274,8 +274,8 @@ body {
     padding-left: 1%;
     padding-right: 1%;
 
-    background-color: rgba(2, 2, 2, 0.3);
-    color:white;
+    background-color: rgba(255, 255, 255, 0.64);
+    color: black;
 
     text-align: justify;
 }
