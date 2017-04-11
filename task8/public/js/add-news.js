@@ -24,8 +24,8 @@ function addNewsOnButton() {
     if (articleModel.validateTags(tagsStr)) {
         article.tags = tagsStr.split(",");
     }
+    console.log(article.tags);
 
-    console.log(article);
     if(articleModel.validateArticle(article)) {
         addArticleInDb(article);
         articleModel.storageArticles();                        // для тегов

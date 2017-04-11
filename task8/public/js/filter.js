@@ -3,149 +3,53 @@
  */
 
 function filterNews() {
-    var article_list = articleModel.getArticles(0, articleModel.getSizeArticles());
-    for (var i = 0; i < article_list.length; i++) {
-        for (var j = 0; j < article_list[i].tags.length; j++) {
-            article_list[i].tags[j] = article_list[i].tags[j].toLowerCase();
-        }
+    let article_list = articleModel.getArticles(0, articleModel.getSizeArticles());
+
+    let matched_articles = [];
+    let input_author;
+    let input_tags;
+    let input_date;
+
+    let filterConfig = {};
+
+    input_tags = document.querySelector(".tags-filter").value.toLowerCase();
+    input_author = document.querySelector(".author-filter").value.toLowerCase();
+    input_date = document.querySelector(".date-filter").value;
+
+
+    if (input_author) {
+        filterConfig.author = input_author;
+    }
+    if (input_tags.length !== 0) {
+        filterConfig.tags = input_tags.split(",");
+    }
+    if (input_date) {
+        filterConfig.date = new Date(input_date).toDateString();
     }
 
-    var input_author;
-    var input_tags;
-    var input_date;
-
-    if (document.querySelector(".tags-filter").value.toLowerCase() != "") {
-        input_tags = document.querySelector(".tags-filter").value.toLowerCase().split(", ");
-    }
-    if (document.querySelector(".author-filter").value.toLowerCase() != "") {
-        input_author = document.querySelector(".author-filter").value.toLowerCase();
-    }
-    if (document.querySelector(".date-filter").value.toLowerCase() != "") {
-        input_date = new Date(document.querySelector(".date-filter").value).toDateString();
-    }
-
-    var matched_articles = [];
-    var article_author;
-    var article_date;
-    var article_tags = [];
-
-    if (input_author === undefined && input_tags === undefined && input_date === undefined) {
-        return false;
-    } else if (input_author && input_tags && input_date) {
-        for (var i = 0; i < article_list.length; i++) {
-
-            article_author = article_list[i].author.toLowerCase();
-            article_tags = article_list[i].tags;
-            article_date = article_list[i].createdAt.toDateString();
-
-            if (input_author === article_author && input_date === article_date) {
-                for (var j = 0; j < input_tags.length; j++) {
-                    if (article_tags.indexOf(input_tags[j]) != -1) {
-                        matched_articles.push(article_list[i]);
-                        break;
+    matched_articles = article_list.filter(function (obj) {
+        if (filterConfig) {
+            let isContTags = false;
+            if (filterConfig.tags) {
+                filterConfig.tags.forEach(function (item) {
+                    if (obj.tags.indexOf(item) !== -1) {
+                        isContTags = true;
                     }
-                }
-
-            }
-        }
-    } else if (input_author && input_tags && input_date === undefined) {
-        for (var i = 0; i < article_list.length; i++) {
-
-            article_author = article_list[i].author.toLowerCase();
-            article_tags = article_list[i].tags;
-
-            if (input_author === article_author) {
-                for (var j = 0; j < input_tags.length; j++) {
-                    if (article_tags.indexOf(input_tags[j]) != -1) {
-                        matched_articles.push(article_list[i]);
-                        break;
-                    }
-                }
-
-            }
-        }
-    } else if (input_author && input_tags === undefined && input_date === undefined) {
-        for (var i = 0; i < article_list.length; i++) {
-
-            article_author = article_list[i].author.toLowerCase();
-            if (input_author === article_author) {
-                matched_articles.push(article_list[i]);
-            }
-        }
-    } else if (input_author && input_tags === undefined && input_date) {
-        for (var i = 0; i < article_list.length; i++) {
-
-            article_author = article_list[i].author.toLowerCase();
-            article_date = article_list[i].createdAt.toDateString();
-
-            if (input_author === article_author && input_date === article_date) {
-                matched_articles.push(article_list[i]);
-            }
-        }
-    } else if (input_author === undefined && input_tags && input_date) {
-        for (var i = 0; i < article_list.length; i++) {
-
-            article_date = article_list[i].createdAt.toDateString();
-            article_tags = article_list[i].tags;
-
-            if (input_date === article_date) {
-                for (var j = 0; j < input_tags.length; j++) {
-                    if (article_tags.indexOf(input_tags[j]) != -1) {
-                        matched_articles.push(article_list[i]);
-                        break;
-                    }
-                }
-
-            }
-        }
-    } else if (input_author === undefined && input_tags && input_date === undefined) {
-        for (var i = 0; i < article_list.length; i++) {
-            article_tags = article_list[i].tags;
-            for (var j = 0; j < input_tags.length; j++) {
-                if (article_tags.indexOf(input_tags[j]) != -1) {
-                    matched_articles.push(article_list[i]);
-                    break;
+                });
+                if (isContTags === false){
+                    return false;
                 }
             }
-        }
-    } else if (input_author === undefined && input_tags === undefined && input_date) {
-        for (var i = 0; i < article_list.length; i++) {
-            article_date = article_list[i].createdAt.toDateString();
-            if (input_date === article_date) {
-                matched_articles.push(article_list[i]);
+            if(filterConfig.author && filterConfig.author !== obj.author){
+                return false;
             }
+            if(filterConfig.date && filterConfig.date !== obj.createdAt.toDateString()){
+                return false;
+            }
+            return true;
         }
-    }
+        return true;
+    });
     articleRenderer.removeArticlesFromDom();
     articleRenderer.insertArticlesInDOM(matched_articles);
 }
-
-/*    input_tags = document.querySelector(".tags-filter").value.toLowerCase().split(", ");
- input_author = document.querySelector(".author-filter").value.toLowerCase();
- input_date = document.querySelector(".date-filter").value; //new Date(document.querySelector(".date-filter").value).toDateString();
- let isUndefFilter = false;
- if (!input_author || !input_date || input_tags.indexOf("") !== -1) {
- isUndefFilter = true;
- }
- for (let i = article_list.length-1; i >= 0; i--) {
- if (isUndefFilter) {
- if (!input_author) {
- input_author = article_list[i].author;
- }
- if (!input_date) {
- input_date = article_list[i].createdAt.toString();
- }
- if (input_tags.indexOf("") !== -1) {
- input_tags = article_list[i].tags;
- }
- }
- console.log(input_author);
- console.log(article_list[i].author);
- console.log(input_tags);
- console.log(article_list[i].tags);
- console.log(new Date(input_date).toDateString());
- console.log(article_list[i].createdAt.toDateString());
- if (article_list[i].author === input_author && article_list[i].createdAt.toDateString() === new Date(input_date).toDateString() && articleModel.isContainsTagsInArticle(input_tags, article_list[i])) {
- matched_articles.push(article_list[i]);
- }
- }*/
