@@ -27,10 +27,13 @@ function addNewsOnButton() {
     console.log(article.tags);
 
     if(articleModel.validateArticle(article)) {
-        addArticleInDb(article);
-        articleModel.storageArticles();                        // для тегов
-        articleModel.replaceArticles();
-        renderArticles(0, 6);
+        addArticleInDb(article).then(
+            ready => {
+                articleModel.storageArticles();                        // для тегов
+                articleModel.replaceArticles();
+                renderArticles(0, 6);
+            }
+        );
     }
 
     document.querySelector(".wrapper").style.display = "block";

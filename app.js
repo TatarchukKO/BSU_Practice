@@ -38,20 +38,16 @@ app.delete("/articles/:id", function(req,res){
     res.json(db.articles.remove({id : req.params.id}));
 });
 
-app.patch("/articles", function(req,res){
-    let options = {
-        multi: false,
-        upsert: false
-    };
-    let query = db.articles.findOne({id : req.body.id});
-    res.json(db.articles.update(query, req.body, options));
+app.patch('/articles', function (req, res) { 
+    db.articles.remove({id: req.body.id}); 
+    res.json(db.articles.save(req.body)); 
 });
 
-app.patch("/articles:id", function(req,res){
+/*app.patch("/articles:id", function(req,res){
     let options = {
         multi: false,
         upsert: false
     };
     let query = db.articles.findOne({id : req.params.id});
     res.json(db.articles.update(query, req.body, options));
-});
+});*/

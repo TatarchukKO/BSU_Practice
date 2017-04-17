@@ -8,4 +8,5 @@ function goHomePage() {
     document.querySelector("#add-news-page").style.display = "none";
     document.querySelector("#edit-news-page").style.display = "none";
     document.querySelector(".wrapper").style.display = "block";
+    document.querySelector(".show-more-news").style.display = "block";
 }

@@ -4,7 +4,7 @@
 
 
 var showMoreNews = (function () {
-    var newsAmountOnPage = 0;
+    var newsAmountOnPage = 6;
 
     function startApp() {
         newsAmountOnPage += 6;
@@ -28,12 +28,13 @@ var showMoreNews = (function () {
     }
 
     function showMore() {
-        if (newsAmountOnPage <= articleModel.getSizeArticles()) {
+        if (newsAmountOnPage < articleModel.getSizeArticles()) {
             startApp();
         }
-        if (newsAmountOnPage > articleModel.getSizeArticles()) {
+        if (newsAmountOnPage >= articleModel.getSizeArticles()) {
             document.querySelector(".show-more-news").style.display = "none";
         }
+        return false;
     }
 
     return{

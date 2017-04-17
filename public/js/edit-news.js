@@ -33,9 +33,17 @@ var articleEdit = (function () {
             editedArticle.tags = tagsStr.split(",", 5);
         }
         if (articleModel.validateArticle(editedArticle)) {
-            editArticleFromDb(editedArticle);
-            articleModel.replaceArticles();
-            renderArticles(0, 6);
+            editArticleFromDb(editedArticle).then(
+                ready => {
+                    articleModel.replaceArticles().then(
+                        ready => {
+                            articleRenderer.removeArticlesFromDom();
+                            articleRenderer.insertArticlesInDOM(articleModel.getArticles(0, articleModel.getSizeArticles()));
+                        }
+                    );
+                }
+            );
+
         }
         document.querySelector(".wrapper").style.display = "block";
         document.querySelector("#edit-news-page").style.display = "none";

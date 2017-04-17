@@ -3,29 +3,61 @@
  */
 
 function getArrayFromDb() {
-    let request = new XMLHttpRequest();
-    request.open("GET", "/articles", false);
-    request.send();
-    request.onreadystatechange = function () {
-        if (request.readyState === 4 && request.status === 200) {
-            return request.responseText;
-        }
-    };
-    return request.onreadystatechange();
+    return new Promise((resolve, reject) => {
+        let request = new XMLHttpRequest();
+        request.open("GET", "/articles");
+        request.onload = function () {
+            if (this.status === 200) {
+                resolve(JSON.parse(this.response, (key, value) => {
+                    if (key === "createdAt") {
+                        return new Date(value);
+                    }
+                    return value;
+                }));
+            }
+        };
+        request.onerror = function () {
+            reject(new Error("Error"));
+        };
+        request.send();
+    });
+
 }
 
 function editArticleFromDb(article) {
-    let request = new XMLHttpRequest();
-    request.open("PATCH", "/articles");
-    request.setRequestHeader("content-type", "application/json");
-    request.send(JSON.stringify(article));
+    return new Promise((resolve, reject) => {
+        let request = new XMLHttpRequest();
+        request.open("PATCH", "/articles");
+        request.setRequestHeader("content-type", "application/json");
+        request.onload = function () {
+            if (this.status === 200) {
+                resolve();
+            }
+        };
+        request.onerror = function(){
+            reject(new Error("edit Error"));
+        };
+        request.send(JSON.stringify(article));
+    });
+
 }
 
 function addArticleInDb(article) {
-    let request = new XMLHttpRequest();
-    request.open("POST", "/articles");
-    request.setRequestHeader("content-type", "application/json");
-    request.send(JSON.stringify(article));
+    return new Promise((resolve, reject) => {
+        let request = new XMLHttpRequest();
+        request.open("POST", "/articles");
+        request.setRequestHeader("content-type", "application/json");
+        request.onload = function(){
+            if (this.status === 200){
+                resolve();
+            }
+        };
+        request.onerror = function(){
+            reject(new Error("add article Error"));
+        };
+        request.send(JSON.stringify(article));
+    });
+
 }
 
 function removeArticleFromDb(id) {

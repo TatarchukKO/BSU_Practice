@@ -7,10 +7,33 @@ var articleModel = (function () {
 
     var tags = [];
 
-    function getArticles(skip, top) {
+    function getArticles(skip, top, filterConfig) {
         skip = skip || 0;
-        top = top || 10;
-        return GLOBAL_ARTICLES.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()).slice(skip, skip + top);
+        top = top || GLOBAL_ARTICLES.length;
+        return GLOBAL_ARTICLES.filter(function (obj) {
+            if (filterConfig) {
+                let isContTags = false;
+                if (filterConfig.tags) {
+                    filterConfig.tags.forEach(function (item) {
+                        if (obj.tags.indexOf(item) !== -1) {
+                            isContTags = true;
+                        }
+                    });
+                    if (isContTags === false) {
+                        return false;
+                    }
+                }
+                if (filterConfig.author && filterConfig.author !== obj.author) {
+                    return false;
+                }
+                if (filterConfig.date && filterConfig.date !== obj.createdAt.toDateString()) {
+                    return false;
+                }
+                return GLOBAL_ARTICLES.indexOf(obj) >= skip && GLOBAL_ARTICLES.indexOf(obj) < top;
+            }
+            return GLOBAL_ARTICLES.indexOf(obj) >= skip && GLOBAL_ARTICLES.indexOf(obj) < top;
+        }).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
     }
 
     function getArticleIndexById(id) {
@@ -134,7 +157,7 @@ var articleModel = (function () {
     function isContainsTagsInArticle(tagArr, obj) {
         let containFlag = false;
         tagArr.forEach(function (item) {
-            if (obj.tags.indexOf(item) !== -1){
+            if (obj.tags.indexOf(item) !== -1) {
                 containFlag = true;
                 return;
             }
@@ -143,15 +166,21 @@ var articleModel = (function () {
     }
 
     function replaceArticles() {
-        GLOBAL_ARTICLES = JSON.parse(getArrayFromDb());
-        for (var i = 0; i < GLOBAL_ARTICLES.length; i++)
-            GLOBAL_ARTICLES[i].createdAt = new Date(GLOBAL_ARTICLES[i].createdAt);
-        tags = JSON.parse(localStorage.getItem("tags"));
+        return new Promise((resolve) => {
+            getArrayFromDb().then(
+                response => {
+                    GLOBAL_ARTICLES = response;
+                    GLOBAL_ARTICLES = GLOBAL_ARTICLES.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+                    tags = JSON.parse(localStorage.getItem("tags"));
+                    resolve();
+                },
+                error => console.log("ARRAY FROM DB HAVEN'T LOADED")
+            )
+        });
     }
 
     function storageArticles() {
         localStorage.setItem("tags", JSON.stringify(tags));
-        //localStorage.setItem("articles", JSON.stringify(GLOBAL_ARTICLES));
     }
 
     return {
@@ -243,12 +272,12 @@ document.addEventListener('DOMContentLoaded', startApp);
 
 
 function startApp() {
-    /* DOM Загрузился.
-     Можно найти в нем нужные элементы и сохранить в переменные */
-    articleModel.replaceArticles();
-    articleRenderer.init();
-    /* Нарисуем статьи из массива GLOBAL_ARTICLES в DOM */
-    renderArticles(0, 6);
+    articleModel.replaceArticles().then(
+        ready => {
+            articleRenderer.init();
+            renderArticles(0, 6);
+        }
+    );
 }
 
 /* Глобальная Функция для проверки. Свяжет модель и отображения */

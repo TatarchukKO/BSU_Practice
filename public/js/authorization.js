@@ -15,6 +15,10 @@ var authoModel = (function () {
         pass: "kozya"
     }];
 
+    function getValidData() {
+        return validData;
+    }
+
     function pressLogInButton() {
         document.querySelector(".wrapper").style.display = "none";
         document.querySelector(".detailed-view").style.display = "none";
@@ -59,13 +63,19 @@ var authoModel = (function () {
     }
 
     function storageUsers() {
-        localStorage.setItem("users", JSON.stringify(validData));
+        localStorage.setItem("users", JSON.stringify(authoModel.getArticles()));
     }
+    function getUsersArrayFromLS(){
+        validData = localStorage.getItem("users");
+    }
+
 
     return {
         pressLogInButton: pressLogInButton,
         isValidateLogIn: isValidateLogIn,
-        pressLogOutButton: pressLogOutButton
+        pressLogOutButton: pressLogOutButton,
+        getUsersArrayFromLS, getUsersArrayFromLS,
+        getValidData: getValidData
     };
 
 }());
