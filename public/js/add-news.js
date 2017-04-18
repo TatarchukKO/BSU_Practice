@@ -24,14 +24,16 @@ function addNewsOnButton() {
     if (articleModel.validateTags(tagsStr)) {
         article.tags = tagsStr.split(",");
     }
-    console.log(article.tags);
 
     if(articleModel.validateArticle(article)) {
         addArticleInDb(article).then(
-            ready => {
+            () => {
                 articleModel.storageArticles();                        // для тегов
-                articleModel.replaceArticles();
-                renderArticles(0, 6);
+                articleModel.replaceArticles().then(
+                    () => {
+                        renderArticles(0, 6);
+                    }
+                );
             }
         );
     }

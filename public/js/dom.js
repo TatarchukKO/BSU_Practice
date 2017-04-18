@@ -14,11 +14,9 @@ var articleModel = (function () {
             if (filterConfig) {
                 let isContTags = false;
                 if (filterConfig.tags) {
-                    filterConfig.tags.forEach(function (item) {
-                        if (obj.tags.indexOf(item) !== -1) {
-                            isContTags = true;
-                        }
-                    });
+                    if (filterConfig.tags.some(item => { return obj.tags.includes(item); })) {
+                        isContTags = true;
+                    }
                     if (isContTags === false) {
                         return false;
                     }
@@ -183,6 +181,10 @@ var articleModel = (function () {
         localStorage.setItem("tags", JSON.stringify(tags));
     }
 
+    function setArticleList(article_list) {
+        GLOBAL_ARTICLES = article_list;
+    }
+
     return {
         getArticles: getArticles,
         getArticle: getArticle,
@@ -196,7 +198,8 @@ var articleModel = (function () {
         getSizeArticles: getSizeArticles,
         replaceArticles: replaceArticles,
         storageArticles: storageArticles,
-        validateTags: validateTags
+        validateTags: validateTags,
+        setArticleList: setArticleList
     };
 }());
 

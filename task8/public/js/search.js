@@ -12,8 +12,9 @@ function findArticles(event) {
                 matched_articles.push(item);
             }
         });
-        articleRenderer.removeArticlesFromDom();
-        articleRenderer.insertArticlesInDOM(matched_articles);
+        articleModel.setArticleList(matched_articles);
+        renderArticles(0, 6);
+        console.log(matched_articles);
         return false;
     }
 }

@@ -6,9 +6,9 @@ function getArrayFromDb() {
     return new Promise((resolve, reject) => {
         let request = new XMLHttpRequest();
         request.open("GET", "/articles");
-        request.onload = function () {
-            if (this.status === 200) {
-                resolve(JSON.parse(this.response, (key, value) => {
+        request.onload = () => {
+            if (request.status === 200) {
+                resolve(JSON.parse(request.responseText, (key, value) => {
                     if (key === "createdAt") {
                         return new Date(value);
                     }
@@ -16,7 +16,7 @@ function getArrayFromDb() {
                 }));
             }
         };
-        request.onerror = function () {
+        request.onerror = () => {
             reject(new Error("Error"));
         };
         request.send();
@@ -29,17 +29,16 @@ function editArticleFromDb(article) {
         let request = new XMLHttpRequest();
         request.open("PATCH", "/articles");
         request.setRequestHeader("content-type", "application/json");
-        request.onload = function () {
-            if (this.status === 200) {
+        request.onload = () => {
+            if (request.status === 200) {
                 resolve();
             }
         };
-        request.onerror = function(){
+        request.onerror = () => {
             reject(new Error("edit Error"));
         };
         request.send(JSON.stringify(article));
     });
-
 }
 
 function addArticleInDb(article) {
@@ -47,22 +46,30 @@ function addArticleInDb(article) {
         let request = new XMLHttpRequest();
         request.open("POST", "/articles");
         request.setRequestHeader("content-type", "application/json");
-        request.onload = function(){
-            if (this.status === 200){
+        request.onload = () => {
+            if (request.status === 200){
                 resolve();
             }
         };
-        request.onerror = function(){
+        request.onerror = () => {
             reject(new Error("add article Error"));
         };
         request.send(JSON.stringify(article));
     });
-
 }
 
 function removeArticleFromDb(id) {
-    let request = new XMLHttpRequest();
-    request.open("DELETE", "/articles/" + id);
-    request.setRequestHeader("content-type", "application/json");
-    request.send();
+    return new Promise((resolve, reject) => {
+        let request = new XMLHttpRequest();
+        request.open("DELETE", "/articles/" + id);
+        request.onload = () => {
+            if (request.status === 200){
+                resolve();
+            }
+        };
+        request.onerror = () => {
+            reject(new Error("remove article Error"));
+        };
+        request.send();
+    });
 }

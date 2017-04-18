@@ -18,8 +18,6 @@ function filterNews() {
         filterConf.date = new Date(input_date).toDateString();
     }
 
-    let matched_articles = articleModel.getArticles(0, articleModel.getSizeArticles(), filterConf);
-
-    articleRenderer.removeArticlesFromDom();
-    articleRenderer.insertArticlesInDOM(matched_articles);
+    articleModel.setArticleList(articleModel.getArticles(0, articleModel.getSizeArticles(), filterConf));
+    renderArticles(0, 6);
 }
