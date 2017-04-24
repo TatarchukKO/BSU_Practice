@@ -70,7 +70,6 @@ let authoModel = (function () {
         pressLogInButton: pressLogInButton,
         isValidateLogIn: isValidateLogIn,
         pressLogOutButton: pressLogOutButton,
-        getUsersArrayFromLS, getUsersArrayFromLS,
         getValidData: getValidData
     };
 

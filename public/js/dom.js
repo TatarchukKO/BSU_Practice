@@ -1,12 +1,4 @@
-/**
- * Created by Kanstantsin on 13.03.2017.
- */
-
 let articleModel = (function () {
-    let GLOBAL_ARTICLES = [{}];
-
-    let tags = [];
-
     function getArticlesSizeFromDb() {
         return new Promise((resolve, reject) => {
             let request = new XMLHttpRequest();
@@ -20,6 +12,27 @@ let articleModel = (function () {
                 reject(new Error("Error getting articles size"));
             };
             request.send();
+        });
+    }
+    function getArticlesFromDb(skip, top, filterConfig) {
+        return new Promise((resolve, reject) => {
+            let request = new XMLHttpRequest();
+            request.open("PUT", "/articles");
+            request.setRequestHeader('content-type', 'application/json');
+            request.onload = () => {
+                if (request.status === 200) {
+                    resolve(JSON.parse(request.responseText, (key, value) => {
+                        if (key === "createdAt") {
+                            return new Date(value);
+                        }
+                        return value;
+                    }));
+                }
+            };
+            request.onerror = () => {
+                reject(new Error("Error"));
+            };
+            request.send(JSON.stringify({skip, top, filterConfig}));
         });
     }
     function getArticleFromDb(id) {
@@ -59,211 +72,71 @@ let articleModel = (function () {
             request.send(JSON.stringify(article));
         });
     }
-
-    function getArticles(skip, top, filterConfig) {
-        skip = skip || 0;
-        top = top || GLOBAL_ARTICLES.length;
-        return GLOBAL_ARTICLES.filter(function (obj) {
-            if (filterConfig) {
-                let isContTags = false;
-                if (filterConfig.tags) {
-                    if (filterConfig.tags.some(item => {
-                            return obj.tags.includes(item);
-                        })) {
-                        isContTags = true;
-                    }
-                    if (isContTags === false) {
-                        return false;
-                    }
-                }
-                if (filterConfig.author && filterConfig.author !== obj.author) {
-                    return false;
-                }
-                if (filterConfig.date && filterConfig.date !== obj.createdAt.toDateString()) {
-                    return false;
-                }
-                return GLOBAL_ARTICLES.indexOf(obj) >= skip && GLOBAL_ARTICLES.indexOf(obj) < top;
-            }
-            return GLOBAL_ARTICLES.indexOf(obj) >= skip && GLOBAL_ARTICLES.indexOf(obj) < top;
-        }).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-
-    }
-
-    function getArticleIndexById(id) {
-        let index;
-        for (let i = 0; i < GLOBAL_ARTICLES.length; i++) {
-            if (GLOBAL_ARTICLES[i].id === id) {
-                index = i;
-                break;
-            }
-        }
-        return index;
-    }
-
-    function getArticle(id) {
-        let index = getArticleIndexById(id);
-        if (typeof index === "number") {
-            return GLOBAL_ARTICLES[index];
-        } else {
-            return null;
-        }
-    }
-
-    function isContainsTagInTaglist(tag) {
-        if (tags.indexOf(tag) === -1) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    function addNewTagsToTagList(obj) {
-        obj.tags.forEach(function (item) {
-            if (!isContainsTagInTaglist(item)) {
-                tags.push(item);
-            }
-        });
-    }
-
-    function addArticle(obj) {
-        if (validateArticle(obj)) {
-            addNewTagsToTagList(obj);
-            GLOBAL_ARTICLES[GLOBAL_ARTICLES.length] = obj;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    function validateArticle(article) {
-        let imgRegExp = /^(?:([a-z]+):(?:([a-z]*):)?\/\/)?(?:([^:@]*)(?::([^:@]*))?@)?((?:[a-z0-9_-]+\.)+[a-z]{2,}|localhost|(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])\.){3}(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])))(?::(\d+))?(?:([^:\?\#]+))?(?:\?([^\#]+))?(?:\#([^\s]+))?$/i;
-        if (article.id && article.createdAt && article.tags && article.author &&
-            article.content && article.title && article.image &&
-            typeof article.id === "string" && typeof  article.createdAt === "object" &&
-            typeof article.tags === "object" && typeof  article.author === "string" &&
-            typeof  article.content === "string" && typeof  article.title === "string" &&
-            article.title.length > 0 && article.image.search(imgRegExp) !== -1 &&
-            article.tags.length >= 1 && article.tags.length <= 5 &&
-            article.content.length > 0 && article.author.length > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    function removeArticle(id) {
-        let index = getArticleIndexById(id);
-        GLOBAL_ARTICLES.splice(index, 1);
-    }
-
-    function validateTags(tagsStr) {
-        if (tagsStr.length > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    function editArticle(id, obj) {
-        if (obj.author != undefined || obj.id != undefined || obj.createdAt != undefined || obj.tags != undefined) {
-            return false;
-        }
-        for (var i = 0; i < GLOBAL_ARTICLES.length; i++) {
-            if (id === GLOBAL_ARTICLES[i].id) {
-                if (validateArticle(GLOBAL_ARTICLES[i])) {
-                    if (obj.title != undefined && obj.content != undefined && obj.summary != undefined) {
-                        GLOBAL_ARTICLES[i].title = obj.title;
-                        GLOBAL_ARTICLES[i].content = obj.content;
-                        GLOBAL_ARTICLES[i].summary = obj.summary;
-                        return true;
-                    } else if (obj.title === undefined && obj.content != undefined && obj.summary === undefined) {
-                        GLOBAL_ARTICLES[i].content = obj.content;
-                        return true;
-                    } else if (obj.title != undefined && obj.content === undefined && obj.summary === undefined) {
-                        GLOBAL_ARTICLES[i].title = obj.title;
-                        return true;
-                    } else if (obj.title === undefined && obj.content === undefined && obj.summary != undefined) {
-                        GLOBAL_ARTICLES[i].summary = obj.summary;
-                        return true;
-                    } else if (obj.title != undefined && obj.content === undefined && obj.summary != undefined) {
-                        GLOBAL_ARTICLES[i].summary = obj.summary;
-                        GLOBAL_ARTICLES[i].title = obj.title;
-                        return true;
-                    } else if (obj.title === undefined && obj.content != undefined && obj.summary != undefined) {
-                        GLOBAL_ARTICLES[i].summary = obj.summary;
-                        GLOBAL_ARTICLES[i].content = obj.content;
-                        return true;
-                    } else if (obj.title != undefined && obj.content != undefined && obj.summary === undefined) {
-                        GLOBAL_ARTICLES[i].title = obj.title;
-                        GLOBAL_ARTICLES[i].content = obj.content;
-                        return true;
-                    }
-                }
-            }
-        }
-    }
-
-    function getSizeArticles() {
-        return GLOBAL_ARTICLES.length;
-    }
-
-    function isContainsTagsInArticle(tagArr, obj) {
-        let containFlag = false;
-        tagArr.forEach(function (item) {
-            if (obj.tags.indexOf(item) !== -1) {
-                containFlag = true;
-                return;
-            }
-        });
-        return containFlag;
-    }
-
-    /*function replaceArticles() {
-        return new Promise(resolve => {
-            getArrayFromDb().then(
-                response => {
-                    GLOBAL_ARTICLES = response;
-                    GLOBAL_ARTICLES = GLOBAL_ARTICLES.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-                    tags = JSON.parse(localStorage.getItem("tags"));
+    function addArticleInDb(article) {
+        return new Promise((resolve, reject) => {
+            let request = new XMLHttpRequest();
+            request.open("POST", "/articles");
+            request.setRequestHeader("content-type", "application/json");
+            request.onload = () => {
+                if (request.status === 200) {
                     resolve();
-                },
-                error => console.log("ARRAY FROM DB HAVEN'T LOADED")
-            )
+                }
+            };
+            request.onerror = () => {
+                reject(new Error("add article Error"));
+            };
+            request.send(JSON.stringify(article));
         });
-    }*/
-
-    function storageArticles() {
-        localStorage.setItem("tags", JSON.stringify(tags));
     }
-
-    function setArticleList(article_list) {
-        GLOBAL_ARTICLES = article_list;
+    function removeArticleFromDb(id) {
+        return new Promise((resolve, reject) => {
+            let request = new XMLHttpRequest();
+            request.open("DELETE", "/articles/" + id);
+            request.onload = () => {
+                if (request.status === 200) {
+                    resolve();
+                }
+            };
+            request.onerror = () => {
+                reject(new Error("remove article Error"));
+            };
+            request.send();
+        });
+    }
+    function getArrayFromDb() {
+        return new Promise((resolve, reject) => {
+            let request = new XMLHttpRequest();
+            request.open("GET", "/articles");
+            request.onload = () => {
+                if (request.status === 200) {
+                    resolve(JSON.parse(request.responseText, (key, value) => {
+                        if (key === "createdAt") {
+                            return new Date(value);
+                        }
+                        return value;
+                    }));
+                }
+            };
+            request.onerror = () => {
+                reject(new Error("Error"));
+            };
+            request.send();
+        });
     }
 
     return {
+        getArticlesFromDb: getArticlesFromDb,
         getArticlesSizeFromDb: getArticlesSizeFromDb,
         getArticleFromDb: getArticleFromDb,
         editArticleFromDb: editArticleFromDb,
-        getArticles: getArticles,
-        getArticle: getArticle,
-        addArticle: addArticle,
-        validateArticle: validateArticle,
-        removeArticle: removeArticle,
-        editArticle: editArticle,
-        isContainsTagsInArticle: isContainsTagsInArticle,
-        GLOBAL_ARTICLES: GLOBAL_ARTICLES,
-        tags: tags,
-        getSizeArticles: getSizeArticles,
-        //replaceArticles: replaceArticles,
-        storageArticles: storageArticles,
-        validateTags: validateTags,
-        setArticleList: setArticleList
+        addArticleInDb: addArticleInDb,
+        removeArticleFromDb: removeArticleFromDb
     };
 }());
 
-var articleRenderer = (function () {
-    var ARTICLE_TEMPLATE;
-    var ARTICLE_LIST_NODE;
+let articleRenderer = (function () {
+    let ARTICLE_TEMPLATE;
+    let ARTICLE_LIST_NODE;
 
     function init() {
         /* DOM Загрузился.
@@ -297,7 +170,7 @@ var articleRenderer = (function () {
          Используем template из DOM, заполним его данными конкретной статьи - article.
          Этот код можно сделать лучше ...
          */
-        var template = ARTICLE_TEMPLATE;
+        let template = ARTICLE_TEMPLATE;
         template.content.querySelector('.article-list-item').dataset.id = article.id;
         template.content.querySelector('.article-list-item-title').textContent = article.title;
         template.content.querySelector('.article-list-item-summary').textContent = article.summary;
@@ -340,9 +213,8 @@ function startApp() {
 function renderArticles(skip, top, filterConfig) {
     return new Promise(resolve => {
         articleRenderer.removeArticlesFromDom();
-        getArticlesFromDB(skip, top, filterConfig).then(response => {
-            const articles = response;
-            articleRenderer.insertArticlesInDOM(articles);
+        articleModel.getArticlesFromDb(skip, top, filterConfig).then(response => {
+            articleRenderer.insertArticlesInDOM(response);
             resolve();
         });
     });

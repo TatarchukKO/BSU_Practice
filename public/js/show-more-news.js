@@ -3,8 +3,8 @@
  */
 
 
-var showMoreNews = (function () {
-    var newsAmountOnPage = 6;
+let showMoreNews = (function () {
+    let newsAmountOnPage = 6;
 
     function startApp() {
         newsAmountOnPage += 6;
@@ -21,19 +21,22 @@ var showMoreNews = (function () {
         articleRenderer.removeArticlesFromDom();
 
         // 2. Достанем статьи из модели
-        var articles = articleModel.getArticles(skip, top);
+        let articles = articleModel.getArticles(skip, top);
 
         // 3. Отобразим статьи
         articleRenderer.insertArticlesInDOM(articles);
     }
 
     function showMore() {
-        if (newsAmountOnPage < articleModel.getSizeArticles()) {
-            startApp();
-        }
-        if (newsAmountOnPage >= articleModel.getSizeArticles()) {
-            document.querySelector(".show-more-news").style.display = "none";
-        }
+        articleModel.getArticlesSizeFromDb().then(response =>{
+            const size = response;
+            if (newsAmountOnPage < size) {
+                startApp();
+            }
+            if (newsAmountOnPage >= size) {
+                document.querySelector(".show-more-news").style.display = "none";
+            }
+        });
         return false;
     }
 

@@ -50,6 +50,9 @@ app.put("/articles", function (req, res) {
                 if (filterConfig.author && filterConfig.author !== obj.author) {
                     return false;
                 }
+                if (filterConfig.search && !obj.title.toLowerCase().includes(filterConfig.search)) {
+                    return false;
+                }
                 if (filterConfig.date && new Date(filterConfig.date).toDateString() !== new Date(obj.createdAt).toDateString()) {
                     return false;
                 }
@@ -73,10 +76,6 @@ app.post("/articles", function (req, res) {
     }
 });
 
-/*app.delete("/articles", function(req,res){
- res.json(db.articles.remove({id : req.body.id}));
- });*/
-
 app.delete("/articles/:id", function (req, res) {
     res.json(db.articles.remove({id: req.params.id}));
 });
@@ -90,7 +89,7 @@ app.patch("/articles", function (req, res) {
     article.content = editedArticle.content;
     article.createdAt = new Date();
     if (articleWorker.validateTags(editedArticle.tags)) {
-        article.tags = editedArticle.tags.split(", ");
+        article.tags = editedArticle.tags.split(",");
     }
     if(articleWorker.validateArticle(article)) {
         db.articles.remove({id: articleID});

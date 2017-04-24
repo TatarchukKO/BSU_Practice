@@ -13,7 +13,7 @@ function addNewsOnButton() {
         tags: document.querySelector("#add-news-tags").value.toLowerCase()
     };
 
-    addArticleInDb(article).then(() => {
+    articleModel.addArticleInDb(article).then(() => {
         renderArticles(0, 6);
     });
 
