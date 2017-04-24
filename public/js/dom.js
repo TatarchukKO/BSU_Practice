@@ -2,10 +2,63 @@
  * Created by Kanstantsin on 13.03.2017.
  */
 
-var articleModel = (function () {
+let articleModel = (function () {
     let GLOBAL_ARTICLES = [{}];
 
-    var tags = [];
+    let tags = [];
+
+    function getArticlesSizeFromDb() {
+        return new Promise((resolve, reject) => {
+            let request = new XMLHttpRequest();
+            request.open("GET", "/articles/count");
+            request.onload = () => {
+                if (request.status === 200) {
+                    resolve(Number(request.responseText));
+                }
+            };
+            request.onerror = () => {
+                reject(new Error("Error getting articles size"));
+            };
+            request.send();
+        });
+    }
+    function getArticleFromDb(id) {
+        return new Promise((resolve, reject) => {
+            let request = new XMLHttpRequest();
+            request.open("GET", "/articles/" + id);
+            request.setRequestHeader("content-type", "application/json");
+            request.onload = () => {
+                if (request.status === 200) {
+                    resolve(JSON.parse(request.responseText, (key, value) => {
+                        if (key === "createdAt") {
+                            return new Date(value);
+                        }
+                        return value;
+                    }));
+                }
+            };
+            request.onerror = () => {
+                reject(new Error("edit Error"));
+            };
+            request.send(JSON.stringify(id));
+        });
+    }
+    function editArticleFromDb(article) {
+        return new Promise((resolve, reject) => {
+            let request = new XMLHttpRequest();
+            request.open("PATCH", "/articles");
+            request.setRequestHeader("content-type", "application/json");
+            request.onload = () => {
+                if (request.status === 200) {
+                    resolve();
+                }
+            };
+            request.onerror = () => {
+                reject(new Error("edit Error"));
+            };
+            request.send(JSON.stringify(article));
+        });
+    }
 
     function getArticles(skip, top, filterConfig) {
         skip = skip || 0;
@@ -14,7 +67,9 @@ var articleModel = (function () {
             if (filterConfig) {
                 let isContTags = false;
                 if (filterConfig.tags) {
-                    if (filterConfig.tags.some(item => { return obj.tags.includes(item); })) {
+                    if (filterConfig.tags.some(item => {
+                            return obj.tags.includes(item);
+                        })) {
                         isContTags = true;
                     }
                     if (isContTags === false) {
@@ -163,8 +218,8 @@ var articleModel = (function () {
         return containFlag;
     }
 
-    function replaceArticles() {
-        return new Promise((resolve) => {
+    /*function replaceArticles() {
+        return new Promise(resolve => {
             getArrayFromDb().then(
                 response => {
                     GLOBAL_ARTICLES = response;
@@ -175,7 +230,7 @@ var articleModel = (function () {
                 error => console.log("ARRAY FROM DB HAVEN'T LOADED")
             )
         });
-    }
+    }*/
 
     function storageArticles() {
         localStorage.setItem("tags", JSON.stringify(tags));
@@ -186,6 +241,9 @@ var articleModel = (function () {
     }
 
     return {
+        getArticlesSizeFromDb: getArticlesSizeFromDb,
+        getArticleFromDb: getArticleFromDb,
+        editArticleFromDb: editArticleFromDb,
         getArticles: getArticles,
         getArticle: getArticle,
         addArticle: addArticle,
@@ -196,7 +254,7 @@ var articleModel = (function () {
         GLOBAL_ARTICLES: GLOBAL_ARTICLES,
         tags: tags,
         getSizeArticles: getSizeArticles,
-        replaceArticles: replaceArticles,
+        //replaceArticles: replaceArticles,
         storageArticles: storageArticles,
         validateTags: validateTags,
         setArticleList: setArticleList
@@ -216,7 +274,7 @@ var articleRenderer = (function () {
 
     function insertArticlesInDOM(articles) {
         /* для массива объектов статей получим соотвествующие HTML элементы */
-        var articlesNodes = renderArticles(articles);
+        let articlesNodes = renderArticles(articles);
         /* вставим HTML элементы в '.article-list' элемент в DOM. */
         articlesNodes.forEach(function (node) {
             ARTICLE_LIST_NODE.appendChild(node);
@@ -273,25 +331,19 @@ var articleRenderer = (function () {
  */
 document.addEventListener('DOMContentLoaded', startApp);
 
-
 function startApp() {
-    articleModel.replaceArticles().then(
-        ready => {
-            articleRenderer.init();
-            renderArticles(0, 6);
-        }
-    );
+    articleRenderer.init();
+    renderArticles(0, 6);
+
 }
 
-/* Глобальная Функция для проверки. Свяжет модель и отображения */
-
-function renderArticles(skip, top) {
-    // 1. Удалим статьи из HTML
-    articleRenderer.removeArticlesFromDom();
-
-    // 2. Достанем статьи из модели
-    var articles = articleModel.getArticles(skip, top);
-
-    // 3. Отобразим статьи
-    articleRenderer.insertArticlesInDOM(articles);
+function renderArticles(skip, top, filterConfig) {
+    return new Promise(resolve => {
+        articleRenderer.removeArticlesFromDom();
+        getArticlesFromDB(skip, top, filterConfig).then(response => {
+            const articles = response;
+            articleRenderer.insertArticlesInDOM(articles);
+            resolve();
+        });
+    });
 }

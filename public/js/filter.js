@@ -1,7 +1,3 @@
-/**
- * Created by Kanstantsin on 25.03.2017.
- */
-
 function filterNews() {
     let filterConf = {};
     let input_tags = document.querySelector(".tags-filter").value.toLowerCase();
@@ -18,6 +14,5 @@ function filterNews() {
         filterConf.date = new Date(input_date).toDateString();
     }
 
-    articleModel.setArticleList(articleModel.getArticles(0, articleModel.getSizeArticles(), filterConf));
-    renderArticles(0, 6);
+    renderArticles(0, 6, filterConf);
 }

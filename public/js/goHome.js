@@ -1,12 +1,10 @@
 function goHomePage() {
-    articleModel.replaceArticles().then(() => {
-        renderArticles(0, 6);
-    });
-    if (!userName){
+    renderArticles(0, 6);
+    if (!userName) {
         document.querySelector(".sign-in-button").style.visibility = "visible";
         document.querySelector(".sign-out-button").style.visibility = "hidden";
         document.querySelector(".user-name").style.visibility = "hidden";
-    } else{
+    } else {
         document.querySelector(".sign-in-button").style.visibility = "hidden";
         document.querySelector(".sign-out-button").style.visibility = "visible";
         document.querySelector(".user-name").style.visibility = "visible";

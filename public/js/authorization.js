@@ -1,10 +1,7 @@
-/**
- * Created by Kanstantsin on 21.03.2017.
- */
-var userName = null;
+let userName = null;
 
-var authoModel = (function () {
-    var validData = [{
+let authoModel = (function () {
+    let validData = [{
         login: "fomichev",
         pass: "1234"
     }, {
@@ -26,7 +23,6 @@ var authoModel = (function () {
         document.querySelector(".sign-in-button").style.visibility = "hidden";
         document.querySelector(".authorization").style.display = "block";
     }
-
     function pressLogOutButton() {
         document.querySelector(".sign-in-button").style.visibility = "visible";
         document.querySelector(".sign-out-button").style.visibility = "hidden";
@@ -38,17 +34,17 @@ var authoModel = (function () {
     }
 
     function isValidateLogIn() {
-        var l = document.getElementById("login").value;
-        var p = document.getElementById("pass").value;
+        const l = document.getElementById("login").value;
+        const p = document.getElementById("pass").value;
 
-        var flag = false;
+        let flag = false;
         validData.forEach(function (element) {
             if (l === element.login && p === element.pass) {
                 flag = true;
                 userName = l;
                 return true;
             }
-        })
+        });
         if (flag) {
             document.querySelector(".authorization").style.display = "none";
             document.querySelector(".wrapper").style.display = "inline-block";

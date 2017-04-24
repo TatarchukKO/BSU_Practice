@@ -1,7 +1,3 @@
-/**
- * Created by Kanstantsin on 03.04.2017.
- */
-
 function getArrayFromDb() {
     return new Promise((resolve, reject) => {
         let request = new XMLHttpRequest();
@@ -21,23 +17,26 @@ function getArrayFromDb() {
         };
         request.send();
     });
-
 }
-
-function editArticleFromDb(article) {
+function getArticlesFromDB(skip, top, filterConfig) {
     return new Promise((resolve, reject) => {
         let request = new XMLHttpRequest();
-        request.open("PATCH", "/articles");
-        request.setRequestHeader("content-type", "application/json");
+        request.open("PUT", "/articles");
+        request.setRequestHeader('content-type', 'application/json');
         request.onload = () => {
             if (request.status === 200) {
-                resolve();
+                resolve(JSON.parse(request.responseText, (key, value) => {
+                    if (key === "createdAt") {
+                        return new Date(value);
+                    }
+                    return value;
+                }));
             }
         };
         request.onerror = () => {
-            reject(new Error("edit Error"));
+            reject(new Error("Error"));
         };
-        request.send(JSON.stringify(article));
+        request.send(JSON.stringify({skip, top, filterConfig}));
     });
 }
 
@@ -47,7 +46,7 @@ function addArticleInDb(article) {
         request.open("POST", "/articles");
         request.setRequestHeader("content-type", "application/json");
         request.onload = () => {
-            if (request.status === 200){
+            if (request.status === 200) {
                 resolve();
             }
         };
@@ -63,7 +62,7 @@ function removeArticleFromDb(id) {
         let request = new XMLHttpRequest();
         request.open("DELETE", "/articles/" + id);
         request.onload = () => {
-            if (request.status === 200){
+            if (request.status === 200) {
                 resolve();
             }
         };

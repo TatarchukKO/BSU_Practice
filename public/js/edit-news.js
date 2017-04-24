@@ -1,8 +1,7 @@
 /**
  * Created by Kanstantsin on 25.03.2017.
  */
-var articleEdit = (function () {
-
+let articleEdit = (function () {
     let id;
 
     function goToEditPage(currentNews) {
@@ -10,41 +9,28 @@ var articleEdit = (function () {
         document.querySelector("#edit-news-page").style.display = "block";
 
         id = currentNews.dataset.id;
-        var article = articleModel.getArticle(id);
-
-        document.querySelector("#edit-news-title").textContent = article.title;
-        document.querySelector("#edit-news-img").textContent = article.image;
-        document.querySelector("#edit-news-content").textContent = article.content;
-        document.querySelector("#edit-news-tags").textContent = article.tags;
+        articleModel.getArticleFromDb(id).then(response => {
+            let article = response;
+            document.querySelector("#edit-news-title").textContent = article.title;
+            document.querySelector("#edit-news-img").textContent = article.image;
+            document.querySelector("#edit-news-content").textContent = article.content;
+            document.querySelector("#edit-news-tags").textContent = article.tags;
+        });
     }
 
     function editNews() {
-        let currentArticle = articleModel.getArticle(id);
         let editedArticle = {};
 
-        editedArticle = currentArticle;
-
+        editedArticle.id = id;
         editedArticle.title = document.querySelector("#edit-news-title").value;
         editedArticle.content = document.querySelector("#edit-news-content").value;
-        editedArticle.summary = editedArticle.content.substring(0, 644);
         editedArticle.image = document.querySelector("#edit-news-img").value;
-        let tagsStr = document.querySelector("#edit-news-tags").value;
-        if (articleModel.validateTags(tagsStr)) {
-            editedArticle.tags = tagsStr.split(",", 5);
-        }
-        if (articleModel.validateArticle(editedArticle)) {
-            editArticleFromDb(editedArticle).then(
-                ready => {
-                    articleModel.replaceArticles().then(
-                        ready => {
-                            articleRenderer.removeArticlesFromDom();
-                            articleRenderer.insertArticlesInDOM(articleModel.getArticles(0, articleModel.getSizeArticles()));
-                        }
-                    );
-                }
-            );
+        editedArticle.tags = document.querySelector("#edit-news-tags").value;
 
-        }
+        articleModel.editArticleFromDb(editedArticle).then(() => {
+            renderArticles(0, 6);
+        });
+
         document.querySelector(".wrapper").style.display = "block";
         document.querySelector("#edit-news-page").style.display = "none";
     }

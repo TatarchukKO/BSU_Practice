@@ -468,6 +468,7 @@ body {
 .article-list-item-meta {
     padding-top: 2%;
     float: right;
+    margin-right: 9%;
 }
 
 .filter-add-button {
