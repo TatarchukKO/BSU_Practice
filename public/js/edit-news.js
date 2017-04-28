@@ -1,7 +1,7 @@
 /**
  * Created by Kanstantsin on 25.03.2017.
  */
-let articleEdit = (function () {
+const articleEdit = (function () {
     let id;
 
     function goToEditPage(currentNews) {

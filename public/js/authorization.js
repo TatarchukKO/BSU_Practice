@@ -46,15 +46,20 @@ let authoModel = (function () {
             }
         });
         if (flag) {
-            document.querySelector(".authorization").style.display = "none";
-            document.querySelector(".wrapper").style.display = "inline-block";
-            document.querySelector(".show-more-news").style.display = "block";
-            document.querySelector(".sign-out-button").style.visibility = "visible";
-            document.querySelector(".sign-in-button").style.visibility = "hidden";
-            document.querySelector(".user-name").innerHTML = l;
-            document.querySelector(".user-name").style.visibility = "visible";
-            document.querySelector(".dv-edit-remove-buttons").style.visibility = "visible";
-            document.querySelector(".add-button").style.visibility = "visible";
+            articleModel.getArticlesSizeFromDb().then(response => {
+               if (response <= 6)
+                   document.querySelector(".show-more-news").style.display = "none";
+               else
+                   document.querySelector(".show-more-news").style.display = "block";
+                document.querySelector(".authorization").style.display = "none";
+                document.querySelector(".wrapper").style.display = "inline-block";
+                document.querySelector(".sign-out-button").style.visibility = "visible";
+                document.querySelector(".sign-in-button").style.visibility = "hidden";
+                document.querySelector(".user-name").innerHTML = l;
+                document.querySelector(".user-name").style.visibility = "visible";
+                document.querySelector(".dv-edit-remove-buttons").style.visibility = "visible";
+                document.querySelector(".add-button").style.visibility = "visible";
+            });
         }
     }
 

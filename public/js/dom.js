@@ -134,7 +134,7 @@ let articleModel = (function () {
     };
 }());
 
-let articleRenderer = (function () {
+const articleRenderer = (function () {
     let ARTICLE_TEMPLATE;
     let ARTICLE_LIST_NODE;
 
@@ -206,7 +206,11 @@ document.addEventListener('DOMContentLoaded', startApp);
 
 function startApp() {
     articleRenderer.init();
-    renderArticles(0, 6);
+    articleModel.getArticlesSizeFromDb().then(response =>{
+       if (response <= 6)
+           document.querySelector(".show-more-news").style.display = "none";
+        renderArticles(0, 6);
+    });
 
 }
 

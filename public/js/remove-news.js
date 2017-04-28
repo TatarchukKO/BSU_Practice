@@ -1,5 +1,5 @@
 function removeNews(currentNews) {
-    let id = currentNews.dataset.id;
+    const id = currentNews.dataset.id;
     articleModel.removeArticleFromDb(id).then(() => {
         renderArticles(0, 6);
     });
