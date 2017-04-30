@@ -1,8 +1,3 @@
-/**
- * Created by Kanstantsin on 26.03.2017.
- */
-
-
 let showMoreNews = (function () {
     let newsAmountOnPage = 6;
 
@@ -12,7 +7,6 @@ let showMoreNews = (function () {
         renderArticles(0, newsAmountOnPage);
         document.querySelector(".show-more-news").style.display = "block";
     }
-
     function showMore() {
         articleModel.getArticlesSizeFromDb().then(response =>{
             const size = response;
@@ -25,9 +19,17 @@ let showMoreNews = (function () {
         });
         return false;
     }
+    function setNewsAmountOnPage(amount){
+        newsAmountOnPage = amount;
+    }
+    function getNewsAmountOnPage(){
+        return newsAmountOnPage;
+    }
 
     return{
-        showMore : showMore
+        showMore : showMore,
+        setNewsAmountOnPage: setNewsAmountOnPage,
+        getNewsAmountOnPage: getNewsAmountOnPage
     };
 
 }());

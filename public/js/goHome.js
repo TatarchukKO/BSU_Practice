@@ -1,8 +1,9 @@
 function goHomePage() {
     articleModel.getArticlesSizeFromDb().then(response => {
         const size = response;
-        renderArticles(0, 6).then(() => {
-            if (size <= 6)
+        const onPage = showMoreNews.getNewsAmountOnPage();
+        renderArticles(0, onPage).then(() => {
+            if (size <= onPage)
                 document.querySelector(".show-more-news").style.display = "none";
             else
                 document.querySelector(".show-more-news").style.display = "block";
