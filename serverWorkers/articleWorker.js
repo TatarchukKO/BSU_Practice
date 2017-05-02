@@ -1,4 +1,4 @@
-let db = require('diskdb');
+const db = require('diskdb');
 db.connect("./db", ["articles"]);
 
 function validateArticle(article) {
@@ -92,6 +92,7 @@ function editArticle(req, res) {
         }
     }
 }
+
 module.exports = {
     getArticlesSize,
     getArticle,

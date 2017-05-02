@@ -1,19 +1,31 @@
+const express = require("express");
+const app = express();
+const bodyParser = require('body-parser');
 const articleWorker = require('./serverWorkers/articleWorker');
-let express = require("express");
-let app = express();
-let db = require("diskdb");
-db.connect("./db", ["articles"]);
-let bodyParser = require('body-parser');
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const session = require("express-session");
+const sessionStore = require("connect-diskdb")(session);
+const store = new sessionStore({path: "./db", name: "sessions"});
+const db = require("diskdb");
+db.connect("./db/", ["articles", "users"]);
+app.use(express.static("public"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: true,
+    store: store
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.set('port', (process.env.PORT || 3000));
 
 app.use(express.static(__dirname + '/public'));
-
-// we need it to parse content-type application/json
-app.use(bodyParser.json());
-
-// we need it to parse content-type application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended: true}));
+/*app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));*/
 
 app.listen(app.get('port'), function () {
     console.log('Node app is running on port', app.get('port'));
@@ -29,3 +41,33 @@ app.put("/articles", articleWorker.getArticles);
 app.post("/articles", articleWorker.addArticle);
 app.delete("/articles/:id", articleWorker.removeArticle);
 app.patch("/articles", articleWorker.editArticle);
+
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => {
+    const error = user ? null : new Error("error deserialize");
+    done(error, user);
+});
+passport.use("login", new LocalStrategy({
+     passReqToCallback: true
+    },
+    (req, username, password, done) => {
+        const user = db.users.findOne({username: username});
+        if (!user) {
+            console.log("username isn't found");
+            return done(null, false);
+        }
+        if (password !== user.password) {
+            console.log("wrong password");
+            return done(null, false);
+        }
+        return done(null, user);
+    })
+);
+
+app.post("/login", passport.authenticate("login"), (req, res) => res.sendStatus(200));
+
+app.get("/logout", (req, res) => {
+    req.logout();
+    res.sendStatus(200);
+});
+app.get("/username", (req, res) => req.user ? res.send(req.user.username) : res.sendStatus(401));

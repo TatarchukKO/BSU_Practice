@@ -206,12 +206,16 @@ document.addEventListener('DOMContentLoaded', startApp);
 
 function startApp() {
     articleRenderer.init();
-    articleModel.getArticlesSizeFromDb().then(response =>{
-       if (response <= 6)
-           document.querySelector(".show-more-news").style.display = "none";
-        renderArticles(0, 6);
+    articleModel.getArticlesSizeFromDb().then(response => {
+        if (response <= showMoreNews.getNewsAmountOnPage())
+            document.querySelector(".show-more-news").style.display = "none";
     });
-
+    renderArticles(0, 6).then(() => {
+        authorizationModel.getUsername().then(response => {
+            userName = response;
+            goHomePage();
+        });
+    });
 }
 
 function renderArticles(skip, top, filterConfig) {

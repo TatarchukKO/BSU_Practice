@@ -14,7 +14,11 @@ function goHomePage() {
             } else {
                 document.querySelector(".sign-in-button").style.visibility = "hidden";
                 document.querySelector(".sign-out-button").style.visibility = "visible";
+                document.querySelector(".dv-edit-remove-buttons").style.visibility = "visible";
+                document.querySelector(".add-button").style.visibility = "visible";
                 document.querySelector(".user-name").style.visibility = "visible";
+                document.querySelector(".user-name").innerHTML = userName;
+
             }
             document.querySelector(".detailed-view").style.display = "none";
             document.querySelector(".authorization").style.display = "none";

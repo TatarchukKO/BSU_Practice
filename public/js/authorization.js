@@ -1,19 +1,75 @@
 let userName = null;
 
-let authoModel = (function () {
-    let validData = [{
-        login: "fomichev",
-        pass: "1234"
-    }, {
-        login: "hadanenok",
-        pass: "jeka"
-    }, {
-        login: "titivuk",
-        pass: "kozya"
-    }];
+const authorizationModel = (function () {
+    function logIn(user) {
+        return new Promise((resolve, reject) => {
+            const request = new XMLHttpRequest();
+            request.open("POST", "/login");
+            request.setRequestHeader("content-type", "application/json");
+            request.onload = () => {
+                if (request.status === 200)
+                    resolve();
+                else
+                    reject();
+            };
+            request.onerror = () => {
+                reject(new Error("post user error"));
+            };
+            request.send(JSON.stringify(user));
+        });
+    }
 
-    function getValidData() {
-        return validData;
+    function logOut() {
+        return new Promise((resolve, reject) => {
+            const request = new XMLHttpRequest();
+            request.open("GET", "/logout");
+            request.onload = () => {
+                if (request.status === 200) {
+                    resolve();
+                }
+            };
+            request.onerror = () => {
+                reject(new Error("log out error"))
+            };
+            request.send();
+        })
+    }
+
+    function getUsername() {
+        return new Promise((resolve, reject) => {
+            const request = new XMLHttpRequest();
+            request.open("GET", "/username");
+            request.onload = () => {
+                if (request.status === 200)
+                    resolve(request.responseText);
+                else
+                    reject();
+            };
+            request.onerror = () => {
+                reject(new Error("getting username error"));
+            };
+            request.send();
+        })
+    }
+
+    function doLogIn() {
+        const username = document.getElementById("login").value;
+        const password = document.getElementById("pass").value;
+        if (!username)
+            return false;
+        if (!password)
+            return false;
+        logIn({username, password}).then(
+            () => {
+                getUsername().then(response => {
+                    userName = response;
+                    goHomePage();
+                });
+            },
+            () => {
+                alert("Wrong login or password");
+            }
+        );
     }
 
     function pressLogInButton() {
@@ -23,59 +79,25 @@ let authoModel = (function () {
         document.querySelector(".sign-in-button").style.visibility = "hidden";
         document.querySelector(".authorization").style.display = "block";
     }
+
     function pressLogOutButton() {
-        document.querySelector(".sign-in-button").style.visibility = "visible";
-        document.querySelector(".sign-out-button").style.visibility = "hidden";
-        document.querySelector(".user-name").style.visibility = "hidden";
-        document.querySelector(".dv-edit-remove-buttons").style.visibility = "hidden";
-        document.querySelector(".user-name").innerHTML = "";
-        document.querySelector(".add-button").style.visibility = "hidden";
-
-    }
-
-    function isValidateLogIn() {
-        const l = document.getElementById("login").value;
-        const p = document.getElementById("pass").value;
-
-        let flag = false;
-        validData.forEach(function (element) {
-            if (l === element.login && p === element.pass) {
-                flag = true;
-                userName = l;
-                return true;
-            }
+        logOut().then(() => {
+            document.querySelector(".sign-in-button").style.visibility = "visible";
+            document.querySelector(".sign-out-button").style.visibility = "hidden";
+            document.querySelector(".user-name").style.visibility = "hidden";
+            document.querySelector(".dv-edit-remove-buttons").style.visibility = "hidden";
+            document.querySelector(".user-name").innerHTML = "";
+            document.querySelector(".add-button").style.visibility = "hidden";
+            userName = null;
         });
-        if (flag) {
-            articleModel.getArticlesSizeFromDb().then(response => {
-               if (response <= 6)
-                   document.querySelector(".show-more-news").style.display = "none";
-               else
-                   document.querySelector(".show-more-news").style.display = "block";
-                document.querySelector(".authorization").style.display = "none";
-                document.querySelector(".wrapper").style.display = "inline-block";
-                document.querySelector(".sign-out-button").style.visibility = "visible";
-                document.querySelector(".sign-in-button").style.visibility = "hidden";
-                document.querySelector(".user-name").innerHTML = l;
-                document.querySelector(".user-name").style.visibility = "visible";
-                document.querySelector(".dv-edit-remove-buttons").style.visibility = "visible";
-                document.querySelector(".add-button").style.visibility = "visible";
-            });
-        }
     }
-
-    function storageUsers() {
-        localStorage.setItem("users", JSON.stringify(authoModel.getArticles()));
-    }
-    function getUsersArrayFromLS(){
-        validData = localStorage.getItem("users");
-    }
-
 
     return {
+        doLogIn: doLogIn,
         pressLogInButton: pressLogInButton,
-        isValidateLogIn: isValidateLogIn,
+        getUsername: getUsername,
         pressLogOutButton: pressLogOutButton,
-        getValidData: getValidData
+        logOut: logOut
     };
 
 }());
