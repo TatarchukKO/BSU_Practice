@@ -1,6 +1,5 @@
 /*const usersDb = require("diskdb");
 usersDb.connect("./db", ["users"]);*/
-
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 

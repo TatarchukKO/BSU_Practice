@@ -1,11 +1,11 @@
 function findArticles(event) {
-    let filterConf = {};
-    if (event.keyCode === 13) {
-        let input_text = document.getElementById("search-input").value.toLowerCase();
-        if(input_text){
-            filterConf.search = input_text;
-            renderArticles(0, 6, filterConf);
-            return false;
-        }
+  const filterConf = {};
+  if (event.keyCode === 13) {
+    const inputText = document.getElementById('search-input').value.toLowerCase();
+    if (inputText) {
+      filterConf.search = inputText;
+      renderArticles(0, 6, filterConf);
+      return false;
     }
+  }
 }
