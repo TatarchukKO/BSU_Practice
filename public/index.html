@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Sneaker news</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
 </head>
 <body>
 <header class="header">
@@ -33,6 +34,7 @@
                 <input type="date" placeholder="дд.мм.гггг" class="date-filter"><br><br>
                 <button class="find-button" onclick="filterNews()">НАЙТИ</button>
             </div>
+            <button class="reset-filter" onclick="resetFilter()">СБРОС</button>
             <button class="add-button" onclick="goToAddPage()">ДОБАВИТЬ НОВОСТЬ</button>
         </div>
     </div>
@@ -104,8 +106,6 @@
         </div>
     </template>
 </div>
-
-<clear></clear>
 <footer>
     <div>Sneaker news</div>
     <div>Татарчук Константин, 2 курс, 5 группа <br> 27.02.2017</div>
@@ -122,5 +122,6 @@
 <script type="text/javascript" src="js/remove-news.js"></script>
 <script type="text/javascript" src="js/show-more-news.js"></script>
 <script type="text/javascript" src="js/goHome.js"></script>
+<script type="text/javascript" src="js/global-variables.js"></script>
 </body>
 </html>

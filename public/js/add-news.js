@@ -5,7 +5,7 @@ function goToAddPage() {
 }
 function addNewsOnButton() {
   const article = {
-    id: userName + new Date().toString(),
+    //id: userName + new Date().toString(),
     title: document.querySelector('#add-news-title').value,
     image: document.querySelector('#add-news-img').value,
     author: userName,
@@ -14,10 +14,7 @@ function addNewsOnButton() {
   };
 
   articleModel.addArticleInDb(article).then(() => {
-    renderArticles(0, 6);
+    renderArticles(0, showMoreNews.getNewsAmountOnPage);
+    goHomePage();
   });
-
-  document.querySelector('.wrapper').style.display = 'block';
-  document.querySelector('.show-more-news').style.display = 'block';
-  document.querySelector('#add-news-page').style.display = 'none';
 }

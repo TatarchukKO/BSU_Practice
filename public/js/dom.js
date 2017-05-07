@@ -40,22 +40,16 @@ const articleModel = (function () {
   function getArticleFromDb(id) {
     return new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
-      request.open('GET', `/articles/${id}`);
-      request.setRequestHeader('content-type', 'application/json');
+      request.open('GET', '/articles/' + id);
       request.onload = () => {
         if (request.status === 200) {
-          resolve(JSON.parse(request.responseText, (key, value) => {
-            if (key === 'createdAt') {
-              return new Date(value);
-            }
-            return value;
-          }));
+          resolve(JSON.parse(request.responseText));
         }
       };
       request.onerror = () => {
         reject(new Error('getting article error'));
       };
-      request.send(JSON.stringify(id));
+      request.send();
     });
   }
 
@@ -109,25 +103,20 @@ const articleModel = (function () {
     });
   }
 
-  function getArrayFromDb() {
-    return new Promise((resolve, reject) => {
-      const request = new XMLHttpRequest();
-      request.open('GET', '/articles');
-      request.onload = () => {
-        if (request.status === 200) {
-          resolve(JSON.parse(request.responseText, (key, value) => {
-            if (key === 'createdAt') {
-              return new Date(value);
-            }
-            return value;
-          }));
-        }
-      };
-      request.onerror = () => {
-        reject(new Error('Error'));
-      };
-      request.send();
-    });
+  function validateArticle(article) {
+    let imgRegExp = /^(?:([a-z]+):(?:([a-z]*):)?\/\/)?(?:([^:@]*)(?::([^:@]*))?@)?((?:[a-z0-9_-]+\.)+[a-z]{2,}|localhost|(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])\.){3}(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])))(?::(\d+))?(?:([^:\?\#]+))?(?:\?([^\#]+))?(?:\#([^\s]+))?$/i;
+    if (article.createdAt && article.tags && article.author &&
+      article.content && article.title && article.image &&
+      typeof  article.createdAt === "object" &&
+      typeof article.tags === "object" && typeof  article.author === "string" &&
+      typeof  article.content === "string" && typeof  article.title === "string" &&
+      article.title.length > 0 && article.image.search(imgRegExp) !== -1 &&
+      article.tags.length > 0 && article.tags.length < 6 &&
+      article.content.length > 0 && article.author.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   return {
@@ -137,6 +126,7 @@ const articleModel = (function () {
     editArticleFromDb,
     addArticleInDb,
     removeArticleFromDb,
+    validateArticle: validateArticle,
   };
 }());
 
@@ -175,7 +165,7 @@ const articleRenderer = (function () {
      Этот код можно сделать лучше ...
      */
     const template = ARTICLE_TEMPLATE;
-    template.content.querySelector('.article-list-item').dataset.id = article.id;
+    template.content.querySelector('.article-list-item').dataset.id = article._id;
     template.content.querySelector('.article-list-item-title').textContent = article.title;
     template.content.querySelector('.article-list-item-summary').textContent = article.summary;
     template.content.querySelector('.article-list-item-author').textContent = article.author;
@@ -210,23 +200,23 @@ document.addEventListener('DOMContentLoaded', startApp);
 
 function startApp() {
   articleRenderer.init();
-  articleModel.getArticlesSizeFromDb().then((response) => {
-    if (response <= showMoreNews.getNewsAmountOnPage()) {
-      document.querySelector('.show-more-news').style.display = 'none';
+  const top = showMoreNews.getNewsAmountOnPage();
+  authorizationModel.getUsername().then((response) => {
+      userName = response;
+      renderArticles(0, top, filterConf);
+      goHomePage();
+    }, () => {
+      renderArticles(0, top, filterConf);
+      goHomePage();
     }
-  });
-  renderArticles(0, 6).then(() => {
-    authorizationModel.getUsername().then((response) => {
-        userName = response;
-        goHomePage();
-      },
-      () => {
-        goHomePage();
-      });
-  });
+  );
 }
 
 function renderArticles(skip, top, filterConfig) {
+  articleModel.getArticlesSizeFromDb(response => {
+    if (showMoreNews.getNewsAmountOnPage() >= response)
+      document.querySelector('.show-more-news').style.visibility = 'hidden';
+  });
   return new Promise((resolve) => {
     articleRenderer.removeArticlesFromDom();
     articleModel.getArticlesFromDb(skip, top, filterConfig).then((response) => {

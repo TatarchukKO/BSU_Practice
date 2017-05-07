@@ -4,8 +4,8 @@ const showMoreNews = (function () {
   function startApp() {
     newsAmountOnPage += 6;
     articleRenderer.init();
-    renderArticles(0, newsAmountOnPage);
-    document.querySelector('.show-more-news').style.display = 'block';
+    renderArticles(0, newsAmountOnPage, filterConf);
+    document.querySelector('.show-more-news').style.visibility = 'visible';
   }
 
   function showMore() {
@@ -15,7 +15,7 @@ const showMoreNews = (function () {
         startApp();
       }
       if (newsAmountOnPage >= size) {
-        document.querySelector('.show-more-news').style.display = 'none';
+        document.querySelector('.show-more-news').style.visibility = 'hidden';
       }
     });
     return false;
@@ -24,7 +24,6 @@ const showMoreNews = (function () {
   function setNewsAmountOnPage(amount) {
     newsAmountOnPage = amount;
   }
-
   function getNewsAmountOnPage() {
     return newsAmountOnPage;
   }

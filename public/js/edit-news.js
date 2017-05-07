@@ -16,20 +16,30 @@ const articleEdit = (function () {
   }
 
   function editNews() {
-    const editedArticle = {};
+    const newFields = {};
 
-    editedArticle.id = id;
-    editedArticle.title = document.querySelector('#edit-news-title').value;
-    editedArticle.content = document.querySelector('#edit-news-content').value;
-    editedArticle.image = document.querySelector('#edit-news-img').value;
-    editedArticle.tags = document.querySelector('#edit-news-tags').value;
+    const newTitle = document.querySelector('#edit-news-title').value;
+    const newContent = document.querySelector('#edit-news-content').value;
+    const newImage = document.querySelector('#edit-news-img').value;
+    const newTags = document.querySelector('#edit-news-tags').value;
 
-    articleModel.editArticleFromDb(editedArticle).then(() => {
-      renderArticles(0, 6);
+    if (!newTitle.trim() || !newContent.trim() || !newImage.trim() || !newTags.trim()){
+      alert("fill all fields, please!");
+      return false;
+    }
+
+    newFields.title = document.querySelector('#edit-news-title').value;
+    newFields.content = document.querySelector('#edit-news-content').value;
+    newFields.image = document.querySelector('#edit-news-img').value;
+    newFields.tags = document.querySelector('#edit-news-tags').value;
+    newFields.author = userName;
+    newFields.id = id;
+
+    articleModel.editArticleFromDb(newFields).then(() => {
+      renderArticles(0, showMoreNews.getNewsAmountOnPage()).then(() => {
+        goHomePage();
+      });
     });
-
-    document.querySelector('.wrapper').style.display = 'block';
-    document.querySelector('#edit-news-page').style.display = 'none';
   }
 
   return {

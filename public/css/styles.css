@@ -401,10 +401,8 @@ body {
     width: 100%;
     height: 4vh;
 
-    margin-top: 2%;
+    margin-top: 6%;
     margin-left: 0;
-
-    display: block;
 }
 
 .show-more-news input {
@@ -501,8 +499,10 @@ body {
 }
 
 .find-button {
+    width: 100%;
+
     padding: 0 18px;
-    margin-bottom: 3%;
+    margin-bottom: 2%;
 
     background: transparent;
     border: none;
@@ -512,10 +512,26 @@ body {
     color: white;
 }
 
+.reset-filter {
+    width: 100%;
+
+    margin-top: 3%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+
+    border: none;
+
+    background-color: rgba(2, 2, 2, 0.3);
+
+    font-family: "CenturyGothicRu";
+    font-size: 15px;
+    color: white;
+}
+
 .add-button {
     width: 100%;
 
-    margin-top: 5%;
+    margin-top: 3%;
     padding-top: 1%;
     padding-bottom: 1%;
 
@@ -535,7 +551,7 @@ footer {
     width: 100%;
     height: 40px;
 
-    margin-top: 1.5%;
+    margin-top: 2%;
 
     background-color: black;
 

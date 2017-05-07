@@ -1,4 +1,4 @@
-const eventListeners = (function () {
+/*const eventListeners = (function () {
   function addListeners() {
     let item = document.querySelector('.home-img');
     item.addEventListener('click', goHomePage);
@@ -25,5 +25,5 @@ const eventListeners = (function () {
   return {
     addListeners,
   };
-}());
+}());*/
 

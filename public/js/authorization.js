@@ -1,5 +1,3 @@
-let userName = null;
-
 const authorizationModel = (function () {
   function logIn(user) {
     return new Promise((resolve, reject) => {
