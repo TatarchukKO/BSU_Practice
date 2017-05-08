@@ -4,7 +4,7 @@ const showMoreNews = (function () {
   function startApp() {
     newsAmountOnPage += 6;
     articleRenderer.init();
-    renderArticles(0, newsAmountOnPage, filterConf);
+    renderArticles(0, newsAmountOnPage);
     document.querySelector('.show-more-news').style.visibility = 'visible';
   }
 
