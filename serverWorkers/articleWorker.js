@@ -39,7 +39,6 @@ function getArticle(req, res) {
 function getArticles(req, res) {
   const skip = req.body.skip || 0;
   const filterConfig = req.body.filterConfig;
-  let counter = 0;
   let top;
   let artcls = [{}];
   ArticleModel.count().exec((err, size) => {
@@ -57,8 +56,6 @@ function getArticles(req, res) {
             if (filterConfig) {
               let isContTags = false;
               if (filterConfig.tags) {
-                console.log(filterConfig.tags);
-                console.log(obj.tags);
                 if (filterConfig.tags.some(item => {
                     return obj.tags.includes(item);
                   })) {
@@ -77,8 +74,7 @@ function getArticles(req, res) {
               if (filterConfig.date && new Date(filterConfig.date).toDateString() !== new Date(obj.createdAt).toDateString()) {
                 return false;
               }
-              counter++;
-              return counter <= 6;
+              return true;
             }
             return artcls.indexOf(obj) >= skip && artcls.indexOf(obj) < top;
           });
@@ -94,7 +90,7 @@ function addArticle(req, res) {
   article.content.length > 600 ? article.summary = article.content.substr(0, 600) : article.summary = article.content;
   article.createdAt = new Date();
   if (validateTags(tagStr)) {
-    article.tags = tagStr.split(', ');
+    article.tags = tagStr.split(',');
     if (validateArticle(article)) {
       new ArticleModel(article).save(err => {
         err ? res.sendStatus(500) : res.sendStatus(200);

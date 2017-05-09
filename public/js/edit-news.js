@@ -8,10 +8,12 @@ const articleEdit = (function () {
     id = currentNews.dataset.id;
     articleModel.getArticleFromDb(id).then((response) => {
       const article = response;
+      console.log(article);
       document.querySelector('#edit-news-title').textContent = article.title;
       document.querySelector('#edit-news-img').textContent = article.image;
       document.querySelector('#edit-news-content').textContent = article.content;
       document.querySelector('#edit-news-tags').textContent = article.tags;
+      console.log(document.querySelector('#edit-news-tags').textContent);
     });
   }
 
@@ -25,7 +27,7 @@ const articleEdit = (function () {
 
     if (!newTitle.trim() || !newContent.trim() || !newImage.trim() || !newTags.trim()){
       alert("fill all fields, please!");
-      return false;
+      return;
     }
 
     newFields.title = document.querySelector('#edit-news-title').value;
@@ -36,9 +38,11 @@ const articleEdit = (function () {
     newFields.id = id;
 
     articleModel.editArticleFromDb(newFields).then(() => {
-      renderArticles(0, showMoreNews.getNewsAmountOnPage()).then(() => {
+      /*renderArticles(0, showMoreNews.getNewsAmountOnPage()).then(() => {
+        //location.reload();
         goHomePage();
-      });
+      });*/
+      location.reload();
     });
   }
 

@@ -18,7 +18,6 @@ const showMoreNews = (function () {
         document.querySelector('.show-more-news').style.visibility = 'hidden';
       }
     });
-    return false;
   }
 
   function setNewsAmountOnPage(amount) {

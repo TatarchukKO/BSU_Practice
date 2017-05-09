@@ -203,10 +203,10 @@ function startApp() {
   const top = showMoreNews.getNewsAmountOnPage();
   authorizationModel.getUsername().then((response) => {
       userName = response;
-      renderArticles(0, top, filterConf);
+      renderArticles(0, top);
       goHomePage();
     }, () => {
-      renderArticles(0, top, filterConf);
+      renderArticles(0, top);
       goHomePage();
     }
   );

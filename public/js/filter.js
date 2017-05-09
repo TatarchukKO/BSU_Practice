@@ -12,12 +12,14 @@ function filterNews() {
     filterConf.date = new Date(inputDate).toDateString();
   }
   renderArticles(0, showMoreNews.getNewsAmountOnPage(), filterConf);
+  document.querySelector('.show-more-news').style.visibility = 'hidden';
 }
 
-function resetFilter(){
+function resetFilter() {
   filterConf = {};
   document.querySelector('.tags-filter').value = '';
   document.querySelector('.author-filter').value = '';
   document.querySelector('.date-filter').value = '';
+  document.querySelector('.show-more-news').style.visibility = 'visible';
   renderArticles(0, 6);
 }

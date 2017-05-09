@@ -8,7 +8,7 @@ const session = require('express-session');
 const SessionStore = require('connect-diskdb')(session);
 const store = new SessionStore({path: './db', name: 'sessions'});
 const db = require('diskdb');
-db.connect('./db/', ['articles', 'users']);
+db.connect('./db/', ['users']);
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
