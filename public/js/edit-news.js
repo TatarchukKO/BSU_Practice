@@ -12,7 +12,7 @@ const articleEdit = (function () {
       document.querySelector('#edit-news-title').textContent = article.title;
       document.querySelector('#edit-news-img').textContent = article.image;
       document.querySelector('#edit-news-content').textContent = article.content;
-      document.querySelector('#edit-news-tags').textContent = article.tags;
+      document.querySelector('#edit-news-tags').textContent = article.tags.join(",");
       console.log(document.querySelector('#edit-news-tags').textContent);
     });
   }

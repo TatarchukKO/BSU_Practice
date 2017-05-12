@@ -1,23 +1,14 @@
 const showMoreNews = (function () {
   let newsAmountOnPage = 6;
 
-  function startApp() {
-    newsAmountOnPage += 6;
-    articleRenderer.init();
-    renderArticles(0, newsAmountOnPage);
-    document.querySelector('.show-more-news').style.visibility = 'visible';
-  }
-
   function showMore() {
-    articleModel.getArticlesSizeFromDb().then((response) => {
-      const size = response;
-      if (newsAmountOnPage < size) {
-        startApp();
+      if (newsAmountOnPage < 10)
+      {
+        newsAmountOnPage += 6;
+        renderArticles(0, newsAmountOnPage, filterConf);
       }
-      if (newsAmountOnPage >= size) {
+      if (newsAmountOnPage >= 10)
         document.querySelector('.show-more-news').style.visibility = 'hidden';
-      }
-    });
   }
 
   function setNewsAmountOnPage(amount) {

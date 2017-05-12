@@ -37,51 +37,19 @@ function getArticle(req, res) {
   });
 }
 function getArticles(req, res) {
-  const skip = req.body.skip || 0;
-  const filterConfig = req.body.filterConfig;
-  let top;
-  let artcls = [{}];
-  ArticleModel.count().exec((err, size) => {
-    if (err)
-      res.sendStatus(500);
-    else {
-      top = req.body.top || size;
-      ArticleModel.find().exec((err, result) => {
-        if (err)
-          res.sendStatus(500);
-        else {
-          artcls = result;
-          artcls.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-          let matched_articles = artcls.filter(obj => {
-            if (filterConfig) {
-              let isContTags = false;
-              if (filterConfig.tags) {
-                if (filterConfig.tags.some(item => {
-                    return obj.tags.includes(item);
-                  })) {
-                  isContTags = true;
-                }
-                if (isContTags === false) {
-                  return false;
-                }
-              }
-              if (filterConfig.author && filterConfig.author !== obj.author) {
-                return false;
-              }
-              if (filterConfig.search && !obj.title.toLowerCase().includes(filterConfig.search)) {
-                return false;
-              }
-              if (filterConfig.date && new Date(filterConfig.date).toDateString() !== new Date(obj.createdAt).toDateString()) {
-                return false;
-              }
-              return true;
-            }
-            return artcls.indexOf(obj) >= skip && artcls.indexOf(obj) < top;
-          });
-          res.json(matched_articles);
-        }
-      });
-    }
+  const fConfig = req.body.filterConfig;
+  let filter = {};
+  if (fConfig){
+    if (fConfig.author)
+      filter.author = fConfig.author;
+    if (fConfig.createdAt)
+      filter.createdAt = {$gte: new Date(fConfig.createdAt)};
+    if (fConfig.tags)
+      filter.tags = {$all: fConfig.tags};
+  }
+
+  ArticleModel.find(filter).sort({createdAt: -1}).skip(req.body.skip).limit(req.body.top).exec((err, articles) => {
+    err? res.sendStatus(500) : res.send(articles);
   });
 }
 function addArticle(req, res) {
