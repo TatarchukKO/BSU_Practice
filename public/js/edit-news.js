@@ -38,10 +38,6 @@ const articleEdit = (function () {
     newFields.id = id;
 
     articleModel.editArticleFromDb(newFields).then(() => {
-      /*renderArticles(0, showMoreNews.getNewsAmountOnPage()).then(() => {
-        //location.reload();
-        goHomePage();
-      });*/
       location.reload();
     });
   }

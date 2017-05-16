@@ -14,21 +14,14 @@ const articleModel = (function () {
       request.send();
     });
   }
-
   function getArticlesFromDb(skip, top, filterConfig) {
     return new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
       request.open('PUT', '/articles');
       request.setRequestHeader('content-type', 'application/json');
       request.onload = () => {
-        if (request.status === 200) {
-          resolve(JSON.parse(request.responseText, (key, value) => {
-            if (key === 'createdAt') {
-              return new Date(value);
-            }
-            return value;
-          }));
-        }
+        if (request.status === 200)
+          resolve(JSON.parse(request.responseText));
       };
       request.onerror = () => {
         reject(new Error('Error'));
@@ -36,7 +29,6 @@ const articleModel = (function () {
       request.send(JSON.stringify({skip, top, filterConfig}));
     });
   }
-
   function getArticleFromDb(id) {
     return new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
@@ -52,7 +44,6 @@ const articleModel = (function () {
       request.send();
     });
   }
-
   function editArticleFromDb(article) {
     return new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
@@ -69,7 +60,6 @@ const articleModel = (function () {
       request.send(JSON.stringify(article));
     });
   }
-
   function addArticleInDb(article) {
     return new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
@@ -86,7 +76,6 @@ const articleModel = (function () {
       request.send(JSON.stringify(article));
     });
   }
-
   function removeArticleFromDb(id) {
     return new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
@@ -104,29 +93,34 @@ const articleModel = (function () {
   }
 
   function validateArticle(article) {
-    let imgRegExp = /^(?:([a-z]+):(?:([a-z]*):)?\/\/)?(?:([^:@]*)(?::([^:@]*))?@)?((?:[a-z0-9_-]+\.)+[a-z]{2,}|localhost|(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])\.){3}(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])))(?::(\d+))?(?:([^:\?\#]+))?(?:\?([^\#]+))?(?:\#([^\s]+))?$/i;
-    if (article.createdAt && article.tags && article.author &&
+    const imgRegExp = /^(?:([a-z]+):(?:([a-z]*):)?\/\/)?(?:([^:@]*)(?::([^:@]*))?@)?((?:[a-z0-9_-]+\.)+[a-z]{2,}|localhost|(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])\.){3}(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])))(?::(\d+))?(?:([^:\?\#]+))?(?:\?([^\#]+))?(?:\#([^\s]+))?$/i;
+    if (article.tags && article.author &&
       article.content && article.title && article.image &&
-      typeof  article.createdAt === "object" &&
-      typeof article.tags === "object" && typeof  article.author === "string" &&
+      typeof article.tags === "string" && typeof  article.author === "string" &&
       typeof  article.content === "string" && typeof  article.title === "string" &&
       article.title.length > 0 && article.image.search(imgRegExp) !== -1 &&
-      article.tags.length > 0 && article.tags.length < 6 &&
-      article.content.length > 0 && article.author.length > 0) {
+      article.tags.length > 0 && article.content.length > 0 && article.author.length > 0) {
       return true;
     } else {
       return false;
     }
   }
+  function validateTags(tagsStr) {
+    if (tagsStr.length > 0)
+      return true;
+    else
+      return false;
+  }
 
   return {
-    getArticlesFromDb,
-    getArticlesSizeFromDb,
-    getArticleFromDb,
-    editArticleFromDb,
-    addArticleInDb,
-    removeArticleFromDb,
+    getArticlesFromDb: getArticlesFromDb,
+    getArticlesSizeFromDb: getArticlesSizeFromDb,
+    getArticleFromDb: getArticleFromDb,
+    editArticleFromDb: editArticleFromDb,
+    addArticleInDb: addArticleInDb,
+    removeArticleFromDb: removeArticleFromDb,
     validateArticle: validateArticle,
+    validateTags: validateTags,
   };
 }());
 
@@ -169,7 +163,7 @@ const articleRenderer = (function () {
     template.content.querySelector('.article-list-item-title').textContent = article.title;
     template.content.querySelector('.article-list-item-summary').textContent = article.summary;
     template.content.querySelector('.article-list-item-author').textContent = article.author;
-    template.content.querySelector('.article-list-item-date').textContent = formatDate(article.createdAt);
+    template.content.querySelector('.article-list-item-date').textContent = article.createdAt;
     template.content.querySelector('.article-list-item-img').setAttribute('src', article.image);
     /*
      Склонируем полученный контент из template и вернем как результат
@@ -211,7 +205,6 @@ function startApp() {
     }
   );
 }
-
 function renderArticles(skip, top, filterConfig) {
   articleModel.getArticlesSizeFromDb(response => {
     if (showMoreNews.getNewsAmountOnPage() >= response)

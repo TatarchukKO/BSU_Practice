@@ -6,7 +6,7 @@ function openDetailedView(currentNews) {
     document.querySelector('.dv-img').setAttribute('src', response.image);
     document.querySelector('.dv-content').textContent = response.content;
     document.querySelector('.dv-author').textContent = response.author;
-    document.querySelector('.dv-date').textContent = new Date(response.createdAt).toDateString();
+    document.querySelector('.dv-date').textContent = response.createdAt;
     document.querySelector('.dv-tags').textContent = '';
     for (let j = 0; j < response.tags.length; j++) {
       document.querySelector('.dv-tags').textContent += (`#${response.tags[j].trim()} `);

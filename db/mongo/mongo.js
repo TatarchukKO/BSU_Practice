@@ -13,21 +13,13 @@ const articleSchema = new mongoose.Schema({
   title: String,
   content: String,
   summary: String,
-  createdAt: Date,
+  createdAt: String,
   tags: [String]
 });
 const userSchema = new mongoose.Schema({
   username: String,
   password: String
 });
-
-/*
-const ArticleModel = mongoose.model('articles', articleSchema);
-const UserModel = mongoose.model('users', userSchema);
-*/
-
-/*module.exports.ArticleModel =  ArticleModel;
- module.exports.UserModel = UserModel;*/
 
 module.exports.ArticleModel = db.model('articleModel', articleSchema);
 module.exports.UserModel = db.model('userModel', userSchema);
