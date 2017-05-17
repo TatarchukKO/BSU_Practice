@@ -13,7 +13,7 @@ const articleSchema = new mongoose.Schema({
   title: String,
   content: String,
   summary: String,
-  createdAt: String,
+  createdAt: Date,
   tags: [String]
 });
 const userSchema = new mongoose.Schema({

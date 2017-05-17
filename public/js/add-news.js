@@ -13,9 +13,8 @@ function addNewsOnButton() {
   };
   if (articleModel.validateArticle(article))
     articleModel.addArticleInDb(article).then(() => {
-      renderArticles(0, showMoreNews.getNewsAmountOnPage);
-      goHomePage();
+      location.reload();
     });
   else
-    console.log('Article was not added, make sure your fields filled correctly');
+    alert('Article was not added, make sure your fields filled correctly');
 }

@@ -14,6 +14,7 @@ const articleModel = (function () {
       request.send();
     });
   }
+
   function getArticlesFromDb(skip, top, filterConfig) {
     return new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
@@ -21,7 +22,10 @@ const articleModel = (function () {
       request.setRequestHeader('content-type', 'application/json');
       request.onload = () => {
         if (request.status === 200)
-          resolve(JSON.parse(request.responseText));
+          resolve(JSON.parse(request.responseText, (key, value) => {
+            if (key === 'createdAt') return new Date(value);
+            return value;
+          }));
       };
       request.onerror = () => {
         reject(new Error('Error'));
@@ -91,7 +95,6 @@ const articleModel = (function () {
       request.send();
     });
   }
-
   function validateArticle(article) {
     const imgRegExp = /^(?:([a-z]+):(?:([a-z]*):)?\/\/)?(?:([^:@]*)(?::([^:@]*))?@)?((?:[a-z0-9_-]+\.)+[a-z]{2,}|localhost|(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])\.){3}(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])))(?::(\d+))?(?:([^:\?\#]+))?(?:\?([^\#]+))?(?:\#([^\s]+))?$/i;
     if (article.tags && article.author &&
@@ -105,6 +108,7 @@ const articleModel = (function () {
       return false;
     }
   }
+
   function validateTags(tagsStr) {
     if (tagsStr.length > 0)
       return true;
@@ -163,7 +167,7 @@ const articleRenderer = (function () {
     template.content.querySelector('.article-list-item-title').textContent = article.title;
     template.content.querySelector('.article-list-item-summary').textContent = article.summary;
     template.content.querySelector('.article-list-item-author').textContent = article.author;
-    template.content.querySelector('.article-list-item-date').textContent = article.createdAt;
+    template.content.querySelector('.article-list-item-date').textContent = new Date(article.createdAt).toDateString();
     template.content.querySelector('.article-list-item-img').setAttribute('src', article.image);
     /*
      Склонируем полученный контент из template и вернем как результат

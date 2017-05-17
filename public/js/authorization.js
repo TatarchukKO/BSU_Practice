@@ -55,11 +55,9 @@ const authorizationModel = (function () {
   function doLogIn() {
     const username = document.getElementById('login').value;
     const password = document.getElementById('pass').value;
-    if (!username) {
-      return false;
-    }
-    if (!password) {
-      return false;
+    if (!username || !password) {
+      alert('fill all fields, please');
+      return;
     }
     logIn({username, password}).then(
       () => {

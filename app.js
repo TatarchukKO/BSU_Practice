@@ -44,14 +44,12 @@ passport.use('login', new LocalStrategy({
   },
   (req, username, password, done) => {
     UserModel.findOne({username}, (err, user) => {
-      if (err) {
-        console.log('username isnt found');
-        return done(null, false);
-      }
-      if (password !== user.password) {
-        console.log('wrong password');
-        return done(null, false);
-      }
+      if (err)
+        return done(null, false, { message: 'User is not found'});
+      if (!user)
+        return done(null, false, { message: 'Incorrect username.' });
+      if (password !== user.password)
+        return done(null, false, { message: 'Wrong password'});
       return done(null, user);
     });
   }));

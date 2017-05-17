@@ -8,7 +8,6 @@ const articleEdit = (function () {
     id = currentNews.dataset.id;
     articleModel.getArticleFromDb(id).then((response) => {
       const article = response;
-      console.log(article);
       document.querySelector('#edit-news-title').textContent = article.title;
       document.querySelector('#edit-news-img').textContent = article.image;
       document.querySelector('#edit-news-content').textContent = article.content;

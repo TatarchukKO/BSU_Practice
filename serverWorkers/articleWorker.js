@@ -42,8 +42,13 @@ function getArticles(req, res) {
   if (fConfig) {
     if (fConfig.author)
       filter.author = fConfig.author;
-    if (fConfig.createdAt)
-      filter.createdAt = {$eq: new Date(fConfig.createdAt).toDateString()};
+    if (fConfig.createdAt) {
+      filter.createdAt = {
+        $gte: new Date(fConfig.createdAt),
+        $lt: new Date(new Date(fConfig.createdAt).getTime() + 24 * 60 * 60 * 1000)
+      };
+    }
+
     if (fConfig.tags)
       filter.tags = {$all: fConfig.tags};
   }
@@ -55,7 +60,7 @@ function addArticle(req, res) {
   const article = req.body;
   const tagStr = article.tags;
   article.content.length > 600 ? article.summary = article.content.substr(0, 600) : article.summary = article.content;
-  article.createdAt = new Date().toDateString();
+  article.createdAt = new Date();
   article.tags = tagStr.split(/[\s\W]+/);
   new ArticleModel(article).save(err => {
     err ? res.sendStatus(500) : res.sendStatus(200);
@@ -69,12 +74,13 @@ function removeArticle(req, res) {
 function editArticle(req, res) {
   const newFields = req.body;
   newFields.content.length > 600 ? newFields.summary = newFields.content.substr(0, 600) : newFields.summary = newFields.content;
-  newFields.createdAt = new Date().toDateString();
+  newFields.createdAt = new Date();
   newFields.tags = newFields.tags.split(/[\s\W]+/);
   ArticleModel.findByIdAndUpdate(newFields.id, newFields, err => {
     err ? res.sendStatus(500) : res.sendStatus(200);
   });
 }
+
 module.exports = {
   getArticlesSize,
   getArticle,
