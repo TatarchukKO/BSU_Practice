@@ -21,11 +21,13 @@ const articleModel = (function () {
       request.open('PUT', '/articles');
       request.setRequestHeader('content-type', 'application/json');
       request.onload = () => {
-        if (request.status === 200)
-          resolve(JSON.parse(request.responseText, (key, value) => {
-            if (key === 'createdAt') return new Date(value);
-            return value;
-          }));
+        if (request.status === 200) {
+          const res = JSON.parse(request.responseText);
+          res.articles.forEach(article => {
+            article.createdAt = new Date(article.createdAt);
+          });
+          resolve(res);
+        }
       };
       request.onerror = () => {
         reject(new Error('Error'));
@@ -33,6 +35,7 @@ const articleModel = (function () {
       request.send(JSON.stringify({skip, top, filterConfig}));
     });
   }
+
   function getArticleFromDb(id) {
     return new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
@@ -48,6 +51,7 @@ const articleModel = (function () {
       request.send();
     });
   }
+
   function editArticleFromDb(article) {
     return new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
@@ -64,6 +68,7 @@ const articleModel = (function () {
       request.send(JSON.stringify(article));
     });
   }
+
   function addArticleInDb(article) {
     return new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
@@ -80,6 +85,7 @@ const articleModel = (function () {
       request.send(JSON.stringify(article));
     });
   }
+
   function removeArticleFromDb(id) {
     return new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
@@ -95,6 +101,7 @@ const articleModel = (function () {
       request.send();
     });
   }
+
   function validateArticle(article) {
     const imgRegExp = /^(?:([a-z]+):(?:([a-z]*):)?\/\/)?(?:([^:@]*)(?::([^:@]*))?@)?((?:[a-z0-9_-]+\.)+[a-z]{2,}|localhost|(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])\.){3}(?:(?:[01]?\d\d?|2[0-4]\d|25[0-5])))(?::(\d+))?(?:([^:\?\#]+))?(?:\?([^\#]+))?(?:\#([^\s]+))?$/i;
     if (article.tags && article.author &&
@@ -210,14 +217,11 @@ function startApp() {
   );
 }
 function renderArticles(skip, top, filterConfig) {
-  articleModel.getArticlesSizeFromDb(response => {
-    if (showMoreNews.getNewsAmountOnPage() >= response)
-      document.querySelector('.show-more-news').style.visibility = 'hidden';
-  });
   return new Promise((resolve) => {
     articleRenderer.removeArticlesFromDom();
     articleModel.getArticlesFromDb(skip, top, filterConfig).then((response) => {
-      articleRenderer.insertArticlesInDOM(response);
+      articleRenderer.insertArticlesInDOM(response.articles);
+      totalArticlesAmount = response.size;
       resolve();
     });
   });

@@ -12,17 +12,20 @@ function filterNews() {
     filterConf.createdAt = new Date(inputDate);
   }
   showMoreNews.setNewsAmountOnPage(6);
-  renderArticles(0, showMoreNews.getNewsAmountOnPage(), filterConf);
-  //document.querySelector('.show-more-news').style.visibility = 'hidden';
+  document.querySelector('.show-more-news').style.visibility = 'visible';
+  renderArticles(0, showMoreNews.getNewsAmountOnPage(), filterConf).then(() => {
+    if (showMoreNews.getNewsAmountOnPage() >= totalArticlesAmount)
+      document.querySelector('.show-more-news').style.visibility = 'hidden';
+  });
   return false;
 }
-
 function resetFilter() {
   filterConf = {};
   document.querySelector('.tags-filter').value = '';
   document.querySelector('.author-filter').value = '';
   document.querySelector('.date-filter').value = '';
   document.querySelector('.show-more-news').style.visibility = 'visible';
+  document.getElementById('search-input').value = '';
   showMoreNews.setNewsAmountOnPage(6);
   renderArticles(0, showMoreNews.getNewsAmountOnPage());
 }

@@ -42,18 +42,24 @@ function getArticles(req, res) {
   if (fConfig) {
     if (fConfig.author)
       filter.author = fConfig.author;
-    if (fConfig.createdAt) {
+    if (fConfig.createdAt)
       filter.createdAt = {
         $gte: new Date(fConfig.createdAt),
         $lt: new Date(new Date(fConfig.createdAt).getTime() + 24 * 60 * 60 * 1000)
       };
-    }
-
     if (fConfig.tags)
       filter.tags = {$all: fConfig.tags};
+    if (fConfig.searchTitle)
+      filter.title = {$regex: `.*${fConfig.searchTitle}.*`, $options: 'i'};
   }
-  ArticleModel.find(filter).sort({createdAt: -1}).skip(req.body.skip).limit(req.body.top).exec((err, articles) => {
-    err ? res.sendStatus(500) : res.send(articles);
+  ArticleModel.find(filter).sort({createdAt: -1}).exec((err, articles) => {
+    if (err)
+      res.sendStatus(500);
+    else {
+      const size = articles.length;
+      articles = articles.slice(req.body.skip, req.body.top);
+      res.send({articles, size});
+    }
   });
 }
 function addArticle(req, res) {
