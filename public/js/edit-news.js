@@ -15,7 +15,6 @@ const articleEdit = (function () {
       console.log(document.querySelector('#edit-news-tags').textContent);
     });
   }
-
   function editNews() {
     const newFields = {};
 
@@ -40,7 +39,6 @@ const articleEdit = (function () {
       location.reload();
     });
   }
-
   return {
     goToEditPage,
     editNews,
